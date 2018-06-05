@@ -1,0 +1,36 @@
+{"frames": [
+
+{
+	"filename": "player_20.png",
+	"frame": {"x":1,"y":1,"w":51,"h":56},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":4,"w":51,"h":56},
+	"sourceSize": {"w":64,"h":64}
+},
+{
+	"filename": "player_21.png",
+	"frame": {"x":54,"y":1,"w":51,"h":56},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":4,"w":51,"h":56},
+	"sourceSize": {"w":64,"h":64}
+},
+{
+	"filename": "player_22.png",
+	"frame": {"x":107,"y":1,"w":51,"h":56},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":4,"w":51,"h":56},
+	"sourceSize": {"w":64,"h":64}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "leftWalk.png",
+	"format": "RGBA8888",
+	"size": {"w":159,"h":58},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:582fbc00384fd00597491c08fc5924fe:b8850d23651f40d1aaf98ee0236aa6c9:df43957b3462dbefda05d5df5c19c7f7$"
+}
+}
