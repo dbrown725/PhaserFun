@@ -11,14 +11,15 @@ Heroku Deployment
       https://phaserfun.herokuapp.com/
  - Installed Heroku CLI on local laptop
       https://devcenter.heroku.com/articles/heroku-cli#download-and-install
- - Followed directions to convert configure app to run as php
+ - Followed directions to convert configure app to run as php:  
       https://gist.github.com/wh1tney/2ad13aa5fbdd83f6a489
+ - Navigate to the root of your local application and login to Heroku:   heroku login     
  - In the root of my local application run the below command which
-      sets my previously created Heroku app as a remote:
+      sets my previously created Heroku app as a remote:  
       heroku git:remote -a phaserfun
- - Run the below command to let Heroku know this is a php app:
+ - Run the below command to let Heroku know this is a php app:  
       heroku buildpacks:set heroku/php
- - Push the app to Heroku:
+ - Push the app to Heroku:  
       git push heroku master
- - Test app deployed to Heroku:
+ - Test app deployed to Heroku:  
       https://phaserfun.herokuapp.com/
