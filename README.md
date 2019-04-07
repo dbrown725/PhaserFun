@@ -3,9 +3,9 @@
 Heroku Deployment
  - Starting point
       Crate a simple phaser app locally and added/pushed to GitHub (https://github.com/)
- - Install Git bash and use for all below command line instructions 
+ - Install Git bash and use for all below command line instructions
       https://gitforwindows.org/
- - created an Heroku account
+ - Created an Heroku account
       https://heroku.com
  - Via Heroku site added an app "phaserfun"
       https://phaserfun.herokuapp.com/
@@ -16,9 +16,9 @@ Heroku Deployment
  - In the root of my local application run the below command which
       sets my previously created Heroku app as a remote:
       heroku git:remote -a phaserfun
- - Run the below command to let Heroku know this is a php app
+ - Run the below command to let Heroku know this is a php app:
       heroku buildpacks:set heroku/php
- - Push the app to Heroku
+ - Push the app to Heroku:
       git push heroku master
- - Test app deployed to Heroku
+ - Test app deployed to Heroku:
       https://phaserfun.herokuapp.com/
