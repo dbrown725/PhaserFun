@@ -2,6 +2,7 @@
 var newPlayerAudioPlayed = false;
 var outside = true;
 var walker;
+var score = 0;
 var GameState = {
   //load the game assets before the game starts
   init: function() {
@@ -28,7 +29,8 @@ var GameState = {
 
     this.load.image('background', 'assets/images/colored_desert_640_341.png');
     this.load.image('background_tomb', 'assets/images/darkTomb.png');
-    this.load.image('ground', 'assets/images/platformTransparent.png')
+    this.load.image('ground', 'assets/images/platformTransparent.png');
+    this.load.image('ledge', 'assets/images/platform.png');
     this.load.image('button_left', 'assets/images/button_left_grey.png');
     this.load.image('button_right', 'assets/images/button_right_grey.png');
     this.load.image('button_jump', 'assets/images/button_jump.png');
@@ -62,11 +64,27 @@ var GameState = {
       // Here we create the ground.
     let ground = platforms.create(0, game.world.height - 65, 'ground');
 
+    this.ledge = platforms.create(game.world.width - 100, game.world.height - 165, 'ledge');
+    this.ledge.body.immovable = true;
+    this.ledge.visible = false;
+
+    this.ledge2 = platforms.create(game.world.width - 575, game.world.height - 200, 'ledge');
+    this.ledge2.body.immovable = true;
+    this.ledge2.visible = false;
+
+    //ledge = platforms.create(-75, 350, 'ledge')
+    //ledge.body.immovable = true
+
+
       //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     ground.scale.setTo(2, 2);
 
       //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
+
+    var style = { font: '20px Arial', fill: '#021168'};
+    this.coinsLabel = this.game.add.text(10, 20, 'Coins:', style);
+    this.coinsScore = this.game.add.text(80, 20, '0', style);
 
     this.coin = this.game.add.sprite(this.game.width * .125, this.game.world.height * .5, 'coin');
     this.coin.name = 'coin';
@@ -83,8 +101,8 @@ var GameState = {
     this.tomb.scale.setTo(1.25, 1.25);
     this.tomb.inputEnabled = true;
 
-    this.walker = game.add.sprite(this.game.width * .5, this.game.world.height * 0.1, 'leftRightWalk', 'player_09.png');
-    this.walker.scale.setTo(0.40, 0.40);
+    this.walker = game.add.sprite(10, this.game.world.height * 0.1, 'leftRightWalk', 'player_09.png');
+    this.walker.scale.setTo(0.30, 0.30);
 
     //  We need to enable physics on the player
      game.physics.arcade.enable(this.walker);
@@ -132,10 +150,12 @@ var GameState = {
 
     if (game.physics.arcade.overlap(this.walker, this.coin))
     {
-      console.log("collision");
       this.coin.visible = false;
       this.coin.kill();
       this.coinAudio.play();
+      console.log('score', score);
+      score++;
+      this.coinsScore.text = score;
     }
 
 
@@ -146,11 +166,15 @@ var GameState = {
             if(this.walker.x < 0) {
               if(outside == false) {
                 this.walker.x = game.width - 50;
+                this.ledge.visible = false;
+                this.ledge2.visible = false;
                 outside = true;
               }
 
               this.tomb.visible = true;
               this.backgroundOriginal.visible = true;
+              this.coinsLabel.addColor("#021168", 0);
+              this.coinsScore.addColor("#021168", 0);
             } else {
               this.walker.x -= 3;
             }
@@ -161,9 +185,13 @@ var GameState = {
                  if(outside == true) {
                    this.walker.x = 50;
                    outside = false;
+                   this.ledge.visible = true;
+                   this.ledge2.visible = true;
                  }
                  this.tomb.visible = false;
                  this.backgroundOriginal.visible = false;
+                 this.coinsLabel.addColor("white", 0);
+                 this.coinsScore.addColor("white", 0);
             } else {
               this.walker.x += 3;
             }
