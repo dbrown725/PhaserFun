@@ -86,14 +86,36 @@ var GameState = {
     this.coinsLabel = this.game.add.text(10, 20, 'Coins:', style);
     this.coinsScore = this.game.add.text(80, 20, '0', style);
 
-    this.coin = this.game.add.sprite(this.game.width * .125, this.game.world.height * .5, 'coin');
-    this.coin.name = 'coin';
-    this.coin.anchor.setTo(0, 0);
-    this.coin.scale.setTo(.06, .06);
-    this.coin.inputEnabled = true;
-    game.physics.arcade.enable(this.coin);
-    this.coin.body.immovable = true;
-    //this.coin.body.collideWorldBounds = true;
+    this.outsideCoins = [];
+    for (i = 0; i < 5; i++) {
+      var newCoin = this.game.add.sprite((this.game.width * .125) + (i * 100), this.game.world.height * .5, 'coin');
+      newCoin.name = 'coin';
+      newCoin.anchor.setTo(0, 0);
+      newCoin.scale.setTo(.06, .06);
+      newCoin.inputEnabled = true;
+      game.physics.arcade.enable(newCoin);
+      newCoin.body.immovable = true;
+      //this.coin.body.collideWorldBounds = true;
+
+      this.outsideCoins.push(newCoin);
+    }
+    console.log('this.outsideCoins', this.outsideCoins);
+
+    this.insideCoins = [];
+    for (i = 0; i < 6; i++) {
+      var newCoin = this.game.add.sprite((this.game.width * .125) + (i * 100), this.game.world.height * .15, 'coin');
+      newCoin.name = 'coin';
+      newCoin.anchor.setTo(0, 0);
+      newCoin.scale.setTo(.06, .06);
+      newCoin.inputEnabled = true;
+      game.physics.arcade.enable(newCoin);
+      newCoin.body.immovable = true;
+      newCoin.visible = false;
+      //this.coin.body.collideWorldBounds = true;
+
+      this.insideCoins.push(newCoin);
+    }
+    console.log('this.insideCoins', this.insideCoins);
 
     this.tomb = this.game.add.sprite(this.game.width * .825, this.game.world.height * -.083, 'tomb');
     this.tomb.name = 'tomb';
@@ -147,15 +169,28 @@ var GameState = {
       this.newPlayerAudio.play();
       newPlayerAudioPlayed = true;
     }
+    for (i = 0; i < this.outsideCoins.length; i++) {
+      if (game.physics.arcade.overlap(this.walker, this.outsideCoins[i]))
+      {
+        this.outsideCoins[i].visible = false;
+        this.outsideCoins[i].kill();
+        this.coinAudio.play();
+        console.log('score', score);
+        score++;
+        this.coinsScore.text = score;
+      }
+    }
 
-    if (game.physics.arcade.overlap(this.walker, this.coin))
-    {
-      this.coin.visible = false;
-      this.coin.kill();
-      this.coinAudio.play();
-      console.log('score', score);
-      score++;
-      this.coinsScore.text = score;
+    for (i = 0; i < this.insideCoins.length; i++) {
+      if (game.physics.arcade.overlap(this.walker, this.insideCoins[i]))
+      {
+        this.insideCoins[i].visible = false;
+        this.insideCoins[i].kill();
+        this.coinAudio.play();
+        console.log('score', score);
+        score++;
+        this.coinsScore.text = score;
+      }
     }
 
 
@@ -169,6 +204,17 @@ var GameState = {
                 this.ledge.visible = false;
                 this.ledge2.visible = false;
                 outside = true;
+
+                for (i = 0; i < this.outsideCoins.length; i++) {
+                    if( this.outsideCoins[i].alive) {
+                      this.outsideCoins[i].visible = true;
+                      this.outsideCoins[i].body.enable = true;
+                    }
+                }
+                for (i = 0; i < this.insideCoins.length; i++) {
+                    this.insideCoins[i].visible = false;
+                    this.insideCoins[i].body.enable = false;
+                }
               }
 
               this.tomb.visible = true;
@@ -187,6 +233,18 @@ var GameState = {
                    outside = false;
                    this.ledge.visible = true;
                    this.ledge2.visible = true;
+
+                   for (i = 0; i < this.outsideCoins.length; i++) {
+                       this.outsideCoins[i].visible = false;
+                       this.outsideCoins[i].body.enable = false;
+                   }
+                   for (i = 0; i < this.insideCoins.length; i++) {
+                       if( this.insideCoins[i].alive) {
+                         this.insideCoins[i].visible = true;
+                         this.insideCoins[i].body.enable = true;
+                       }
+                   }
+
                  }
                  this.tomb.visible = false;
                  this.backgroundOriginal.visible = false;
@@ -214,88 +272,6 @@ var GameState = {
        this.jumpAudio.play();
      }
   }
-  // doSomething: function(pointer, doubleTap) {
-  //   console.log('tapped pointer.clientX, pointer.clientY', pointer.clientX, pointer.clientY);
-  //   if(doubleTap) {
-  //     console.log('doubleTap');
-  //   } else {
-  //     console.log('single tap');
-  //   }
-  //   if(this.currentPlayer.customProperties.name == 'Player09') {
-  //     console.log('Player09');
-  //     var tempX = this.currentPlayer.x;
-  //     this.currentPlayer.x = this.game.width * 1.5;
-  //     this.currentPlayer = this.player10;
-  //     this.currentPlayer.x = tempX;
-  //   } else if(this.currentPlayer.customProperties.name == 'Player10') {
-  //     console.log('Player10');
-  //     var tempX = this.currentPlayer.x;
-  //     this.currentPlayer.x = this.game.width * 1.5;
-  //     this.currentPlayer = this.player11;
-  //     this.currentPlayer.x = tempX;
-  //   } else if(this.currentPlayer.customProperties.name == 'Player11') {
-  //     console.log('Player11');
-  //     var tempX = this.currentPlayer.x;
-  //     this.currentPlayer.x = this.game.width * 1.5;
-  //     this.currentPlayer = this.player09;
-  //     this.currentPlayer.x = tempX;
-  //   }
-  //   if(pointer.clientX < this.game.width * .5) {
-  //     console.log('left hand side');
-  //     this.currentPlayer.scale.setTo(-0.4, 0.4);
-  //     this.currentPlayer.x -= 8;
-  //   } else {
-  //     console.log('right hand side');
-  //     this.currentPlayer.scale.setTo(0.4, 0.4);
-  //     this.currentPlayer.x += 8;
-  //   }
-  // },
-  // playerClicked: function(pointer, doubleTap) {
-  //   console.log('player clicked', this.playerBig);
-  //   if(this.playerBig == true) {
-  //     console.log('in true');
-  //     this.player09.scale.setTo(0.4, 0.4);
-  //     this.playerBig = false;
-  //   } else {
-  //     console.log('in false');
-  //     this.player09.scale.setTo(1, 1);
-  //     this.playerBig = true;
-  //   }
-  //   //this.player09.scale.setTo(2, 2);
-  // },
-  // buttonClicked: function(button, pointer) {
-  //   console.log('button.name', button.name);
-  //   console.log('pointer', pointer);
-  //   if(this.currentPlayer.customProperties.name == 'Player09') {
-  //     console.log('Player09');
-  //     var tempX = this.currentPlayer.x;
-  //     this.currentPlayer.x = this.game.width * 1.5;
-  //     this.currentPlayer = this.player10;
-  //     this.currentPlayer.x = tempX;
-  //   } else if(this.currentPlayer.customProperties.name == 'Player10') {
-  //     console.log('Player10');
-  //     var tempX = this.currentPlayer.x;
-  //     this.currentPlayer.x = this.game.width * 1.5;
-  //     this.currentPlayer = this.player11;
-  //     this.currentPlayer.x = tempX;
-  //   } else if(this.currentPlayer.customProperties.name == 'Player11') {
-  //     console.log('Player11');
-  //     var tempX = this.currentPlayer.x;
-  //     this.currentPlayer.x = this.game.width * 1.5;
-  //     this.currentPlayer = this.player09;
-  //     this.currentPlayer.x = tempX;
-  //   }
-  //   if(button.name == 'left' ) {
-  //     console.log('left hand side');
-  //     this.currentPlayer.scale.setTo(-0.4, 0.4);
-  //     this.currentPlayer.x -= 8;
-  //   } else {
-  //     console.log('right hand side');
-  //     this.currentPlayer.scale.setTo(0.4, 0.4);
-  //     this.currentPlayer.x += 8;
-  //   }
-  // }
-
 };
 
 //initiate the Phaser framework
