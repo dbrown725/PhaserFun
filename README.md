@@ -1,14 +1,14 @@
 # PhaserFun
 
 Local Deployment
-  - Navigate with a tool such as Git Bash to the root of the application and start an http server such as:
-      Node http-server (http://jasonwatmore.com/post/2016/06/22/nodejs-setup-simple-http-server-local-web-server)
-      or
-      Python SimpleHTTPServer (http://2ality.com/2014/06/simple-http-server.html)
+  - Navigate with a tool such as Git Bash to the root of the application and start an http server such as:  
+      Node http-server (http://jasonwatmore.com/post/2016/06/22/nodejs-setup-simple-http-server-local-web-server)  
+      or  
+      Python SimpleHTTPServer (http://2ality.com/2014/06/simple-http-server.html)  
 
 Heroku Deployment
- - Starting point
-      Crate a simple phaser app locally and added/pushed to GitHub (https://github.com/)
+ - Starting point  
+      Create a simple phaser app locally and added/pushed to GitHub (https://github.com/)
  - Install Git bash and use for all below command line instructions
       https://gitforwindows.org/
  - Created an Heroku account
