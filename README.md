@@ -1,10 +1,15 @@
 # PhaserFun
 
 Local Deployment
-  - Navigate with a tool such as Git Bash to the root of the application and start an http server such as:  
-      Node http-server (http://jasonwatmore.com/post/2016/06/22/nodejs-setup-simple-http-server-local-web-server)  
-      or  
-      Python SimpleHTTPServer (http://2ality.com/2014/06/simple-http-server.html)  
+  - Navigate with a tool such as Git Bash to the root of the application
+
+      ```npm install```
+
+
+      ```npm run dev```
+      localhost:3000
+
+      ```npm run deploy```
 
 Heroku Deployment
  - Starting point  
@@ -30,3 +35,11 @@ Heroku Deployment
       git push heroku master
  - Test app deployed to Heroku:  
       https://phaserfun.herokuapp.com/
+
+This work is based off of several existing repos:
+
+https://github.com/troyedwardsjr/phaser3-typescript-webpack
+
+https://github.com/nkholski/phaser3-es6-webpack
+
+https://github.com/lean/phaser-es6-webpack
