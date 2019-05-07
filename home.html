@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-		<title>Phaser 2 Fun</title>
-		<script type="text/javascript" src="js/phaser.min.js"></script>
-		<style>
-		  body {
-		    padding: 0px;
-		    margin: 0px;
-		    background: black;
-		  }
-		  </style>
-	</head>
+<head>
+    <meta charset="UTF-8">
+    <title>Phaser3 - ES6 - Webpack</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="format-detection" content="telephone=no">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background-color:black;
+        }
+    </style>
+</head>
 
-	<body>
-		<!-- include the main game file -->
-		<div id="parentDiv">
-			<script src="js/main.js"></script>
-		</div>
-	</body>
+<body>
+    <div id="content"></div>
+<script type="text/javascript" src="./dist/vendor.bundle.js"></script><script type="text/javascript" src="./dist/bundle.js"></script></body>
 </html>
