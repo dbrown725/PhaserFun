@@ -7,7 +7,7 @@ class TestScene extends Phaser.Scene {
 			key: 'TestScene'
 		});
 	}
-	
+
 	preload() {
 		this.load.tilemapTiledJSON('map', '/assets/tilemaps/desert.json');
 		this.load.image('Desert', '/assets/tilemaps/tmw_desert_spacing.png');

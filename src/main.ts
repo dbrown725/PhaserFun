@@ -1,6 +1,7 @@
 import 'phaser';
 
 import DesertScene from './scenes/DesertScene';
+import PyramidScene from './scenes/PyramidScene';
 
 const config:GameConfig = {
     type: Phaser.AUTO,
@@ -20,7 +21,7 @@ const config:GameConfig = {
         }
     },
     scene: [
-      DesertScene
+      DesertScene, PyramidScene
     ]
 };
 

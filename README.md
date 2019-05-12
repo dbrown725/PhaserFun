@@ -11,6 +11,9 @@ Local Deployment
 
       ```npm run deploy```
 
+https://freesound.org
+https://kenney.nl/      
+
 Heroku Deployment
  - Starting point  
       Create a simple phaser app locally and added/pushed to GitHub (https://github.com/)
@@ -36,10 +39,10 @@ Heroku Deployment
  - Test app deployed to Heroku:  
       https://phaserfun.herokuapp.com/
 
+## Credits
+
 This work is based off of several existing repos:
 
 https://github.com/troyedwardsjr/phaser3-typescript-webpack
 
-https://github.com/nkholski/phaser3-es6-webpack
-
-https://github.com/lean/phaser-es6-webpack
+https://github.com/digitsensitive/phaser3-typescript

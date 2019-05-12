@@ -1,8 +1,4 @@
-class DesertScene extends Phaser.Scene {
-  background: Phaser.GameObjects.Sprite;
-  tomb: Phaser.GameObjects.Sprite;
-  door: Phaser.Physics.Arcade.Sprite;
-  blocker: Phaser.Physics.Arcade.Sprite;
+class PyramidScene extends Phaser.Scene {
   walker: Phaser.Physics.Arcade.Sprite;
   ground: Phaser.Physics.Arcade.Image;
   platformsContainer: Phaser.GameObjects.Container;
@@ -13,6 +9,8 @@ class DesertScene extends Phaser.Scene {
   rightButton: Phaser.Physics.Arcade.Sprite;
   coinsLabel: Phaser.GameObjects.Text;
   coinsScore: Phaser.GameObjects.Text;
+  gameOver: Phaser.GameObjects.Text;
+  bricks: Phaser.Physics.Arcade.Image[];
 
   cursors: any;
   walkerDirection: string;
@@ -28,16 +26,17 @@ class DesertScene extends Phaser.Scene {
 
   constructor() {
     super({
-      key: 'DesertScene'
+      key: 'PyramidScene'
     });
   }
 
-  init() {
+  init(data) {
       this.isPlayerMidJump = false;
       this.isPlayerMoving = false;
       this.isFirstLoop = true;
       this.isMobile = false;
-      this.score = 0;
+      console.log('data', data);
+      this.score = data.score;
       this.openDoor = false;
 
       //Allows for default pointer plus one. Needed so the jump button
@@ -59,46 +58,17 @@ class DesertScene extends Phaser.Scene {
       }
   }
 
-  preload() {
-    //visuals
-    this.load.image('desertBG', '/assets/sprites/colored_desert_640_341.png');
-    this.load.image('tomb', '/assets/sprites/tomb.png');
-    this.load.image('door', '/assets/sprites/door.png');
-    this.load.image('blocker', '/assets/sprites/blocker.png');
-    this.load.image('ground', 'assets/sprites/platformTransparent.png');
-    this.load.image('coin', 'assets/sprites/coin.png');
-    this.load.image('btnJump', 'assets/sprites/button_jump.png');
-    this.load.image('btnLeft', 'assets/sprites/button_left_grey.png');
-    this.load.image('btnRight', 'assets/sprites/button_right_grey.png');
-    this.load.atlas('walker', 'assets/sprites/leftRightWalk.png', 'assets/sprites/leftRightWalk.json');
-    //audios
-    //  Firefox doesn't support mp3 files, so use ogg
-    this.load.audio('newPlayerAudio', ['assets/audio/mb_new.mp3', 'assets/audio/mb_new.ogg']);
-    this.load.audio('coinAudio', ['assets/audio/mb_coin.mp3', 'assets/audio/mb_coin.ogg']);
-    this.load.audio('jumpAudio', ['assets/audio/smb_jump-small.mp3', 'assets/audio/smb_jump-small.ogg']);
-    this.load.audio('doorAudio', ['assets/audio/door.mp3', 'assets/audio/door.ogg']);
-  }
+preload ()
+    {
+        this.load.atlasXML('sokoban', 'assets/sprites/sokoban_spritesheet.png', 'assets/sprites/sokoban_spritesheet.xml');
+        this.load.atlasXML('round', 'assets/sprites/round.png', 'assets/sprites/round.xml');
+    }
+
 
   create() {
-    this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'desertBG');
-
     var style = { font: '20px Roboto', fill: 'grey' };
     this.coinsLabel = this.add.text(10, 15, 'Coins:', style);
-    this.coinsScore = this.add.text(80, 15, '0', style);
-
-    this.tomb = this.add.sprite(this.sys.canvas.width * .825, this.sys.canvas.height * -.083, 'tomb');
-    this.tomb.setName('tomb');
-    this.tomb.setOrigin(0, 0);
-    this.tomb.setScale(1.25, 1.25);
-    this.tomb.setInteractive(true, function() { });
-
-    this.blocker = this.physics.add.staticSprite(this.sys.canvas.width * .999, this.sys.canvas.height * .695, 'blocker');
-    this.blocker.setScale(1.35).refreshBody();
-    this.blocker.setInteractive(true, function() { });
-
-    this.door = this.physics.add.staticSprite(this.sys.canvas.width * .985, this.sys.canvas.height * .703, 'door');
-    this.door.setScale(1.35).refreshBody();
-    this.door.setInteractive(true, function() { });
+    this.coinsScore = this.add.text(80, 15, this.score.toString(), style);
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
@@ -131,8 +101,56 @@ class DesertScene extends Phaser.Scene {
     });
     this.walkerDirection = 'right';
 
+    // this.brick = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (1 * 50), this.sys.canvas.height * .7, 'sokoban', 'ground_01.png');
+    // this.brick.setScale(1).refreshBody();
+    // this.brick.setCollideWorldBounds(true);
+    // this.physics.add.collider(this.walker, this.brick);
+
+    //Coins
+    var brickLocation = [[4, 2.65], [5, 2.65], [6, 2.65], [7, 2.65],
+        [8, 2.65], [9, 2.65], [10, 2.65], [11, 2.65], [12, 2.65], [13, 2.65]];
+    brickLocation.push([15, 5], [16, 5.5], [17, 6], [18, 6],  [19, 6], [20, 6], [21, 6]);
+    brickLocation.push([4, 8], [5, 8], [6, 8], [7, 8],
+        [8, 8], [9, 8], [10, 8], [11, 8], [12, 8], [13, 8]);
+
+    this.bricks = [];
+    brickLocation.forEach(function(value) {
+      var newBrick = this.physics.add.staticSprite((value[0] * 32), this.sys.canvas.height - (value[1] * 32), 'sokoban', 'block_07.png');
+      newBrick.setScale(.5).refreshBody();
+      newBrick.setCollideWorldBounds(true);
+      this.bricks.push(newBrick);
+    }, this);
+    this.physics.add.collider(this.walker, this.bricks);
+
+    var gameOverStyle = { font: '100px Roboto', fill: 'red' };
+    this.gameOver = this.add.text(this.sys.canvas.width * .12, this.sys.canvas.height * .25, '', gameOverStyle);
+
+
+//     var atlasTexture = this.textures.get('sokoban')
+//
+//     var frames = atlasTexture.getFrameNames();
+// console.log('frames.length', frames.length);
+//     for (var i = 0; i < frames.length; i++)
+//     {
+//         var x = Phaser.Math.Between(0, 800);
+//         var y = Phaser.Math.Between(0, 600);
+//
+//         this.add.image(x, y, 'sokoban', frames[i]);
+//     }
+
+// var atlasTexture = this.textures.get('round')
+//
+// var frames = atlasTexture.getFrameNames();
+//
+// for (var i = 0; i < frames.length; i++)
+// {
+//     var x = Phaser.Math.Between(0, 800);
+//     var y = Phaser.Math.Between(0, 600);
+//
+//     this.add.image(x, y, 'round', frames[i]);
+// }
+
     this.physics.add.collider(this.walker, this.platforms);
-    this.physics.add.collider(this.walker, this.blocker);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -179,12 +197,12 @@ class DesertScene extends Phaser.Scene {
     }
 
     //Coins
-    var coinLocation = [[5, .2]];
-    coinLocation.push([4.5, .3], [5.5, .3]);
-    coinLocation.push([4, .4], [5, .4], [6, .4]);
-    coinLocation.push([3.5, .5], [4.5, .5], [5.5, .5], [6.5, .5]);
-    coinLocation.push([3, .6], [4, .6], [5, .6], [6, .6], [7, .6]);
-    coinLocation.push([2.5, .7], [3.5, .7], [4.5, .7], [5.5, .7], [6.5, .7], [7.5, .7]);
+    var coinLocation = [[2, .3]];
+    coinLocation.push([1.5, .4], [2.5, .4]);
+    coinLocation.push([1, .5], [2, .5], [3, .5]);
+    coinLocation.push([.5, .6], [1.5, .6], [2.5, .6], [3.5, .6]);
+    coinLocation.push([.5, .1], [1.5, .1], [2.5, .1], [3.5, .1], [4.5, .1]);
+    coinLocation.push([6.7, .37], [7.35, .31], [8, .27], [8.75, .27], [9.5, .27]);
     this.coins = [];
     coinLocation.forEach(function(value) {
       var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'coin');
@@ -199,11 +217,6 @@ class DesertScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number) {
-
-    console.log('walker x, y', this.walker.x, this.walker.y);
-    if(this.walker.x > 618 && this.walker.y > 230) {
-        this.scene.start('PyramidScene', {score: this.score});
-    }
 
     if (this.isFirstLoop == true) {
 
@@ -257,11 +270,6 @@ class DesertScene extends Phaser.Scene {
         this.walker.setVelocityX(-150);
       }
     }
-
-    //open door slowly
-    if(this.openDoor && this.door.y > 155) {
-        this.door.setY(this.door.y - .5);
-    }
   }
 
   coinCollision(walker, coin) {
@@ -269,16 +277,14 @@ class DesertScene extends Phaser.Scene {
     coin.destroy();
     this.score = this.score + 1;
     this.coinsScore.text = this.score.toString();
-    if(this.score >= 21) {
+    if(this.score >= 41) {
         //this.door.setY(this.door.y - 50);
         var sceneContext = this;
         setTimeout(function() {
-          sceneContext.openDoor = true;
-          sceneContext.blocker.destroy();
-          sceneContext.sound.play('doorAudio');
+            sceneContext.gameOver.text = "Game Over";
       }, 1500);
     }
   }
 }
 
-export default DesertScene;
+export default PyramidScene;
