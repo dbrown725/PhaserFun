@@ -11,6 +11,8 @@ class PyramidScene extends Phaser.Scene {
   coinsScore: Phaser.GameObjects.Text;
   gameOver: Phaser.GameObjects.Text;
   bricks: Phaser.Physics.Arcade.Image[];
+  doorInterior: Phaser.Physics.Arcade.Sprite;
+  doorInteriorBlack: Phaser.Physics.Arcade.Sprite;
 
   cursors: any;
   walkerDirection: string;
@@ -23,6 +25,8 @@ class PyramidScene extends Phaser.Scene {
   isMobile: boolean;
   score: integer;
   openDoor: boolean;
+  isInitial: boolean;
+  initialCount: integer;
 
   constructor() {
     super({
@@ -38,6 +42,8 @@ class PyramidScene extends Phaser.Scene {
       console.log('data', data);
       this.score = data.score;
       this.openDoor = false;
+      this.isInitial = true;
+      this.initialCount = 0;
 
       //Allows for default pointer plus one. Needed so the jump button
       //and a left or right button can be pressed at the same time
@@ -62,10 +68,13 @@ preload ()
     {
         this.load.atlasXML('sokoban', 'assets/sprites/sokoban_spritesheet.png', 'assets/sprites/sokoban_spritesheet.xml');
         this.load.atlasXML('round', 'assets/sprites/round.png', 'assets/sprites/round.xml');
+        this.load.image('doorInterior', '/assets/sprites/door_interior.png');
+        this.load.image('doorInteriorBlack', '/assets/sprites/door_interior_black.png');
     }
 
 
   create() {
+
     var style = { font: '20px Roboto', fill: 'grey' };
     this.coinsLabel = this.add.text(10, 15, 'Coins:', style);
     this.coinsScore = this.add.text(80, 15, this.score.toString(), style);
@@ -73,7 +82,7 @@ preload ()
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
 
-    this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.1, 'walker', 'player_09.png');
+    this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.35, 'walker', 'player_09.png');
     this.walker.setScale(0.30, 0.30);
     this.walker.setBounce(0.2);
     this.walker.setCollideWorldBounds(true);
@@ -122,33 +131,14 @@ preload ()
     }, this);
     this.physics.add.collider(this.walker, this.bricks);
 
+    this.doorInterior = this.physics.add.staticSprite(5, this.sys.canvas.height * .3, 'doorInterior');
+    this.doorInterior.setScale(1.35).refreshBody();
+
+    this.doorInteriorBlack = this.physics.add.staticSprite(5, this.sys.canvas.height * .15, 'doorInteriorBlack');
+    this.doorInteriorBlack.setScale(1.35).refreshBody();
+
     var gameOverStyle = { font: '100px Roboto', fill: 'red' };
     this.gameOver = this.add.text(this.sys.canvas.width * .12, this.sys.canvas.height * .25, '', gameOverStyle);
-
-
-//     var atlasTexture = this.textures.get('sokoban')
-//
-//     var frames = atlasTexture.getFrameNames();
-// console.log('frames.length', frames.length);
-//     for (var i = 0; i < frames.length; i++)
-//     {
-//         var x = Phaser.Math.Between(0, 800);
-//         var y = Phaser.Math.Between(0, 600);
-//
-//         this.add.image(x, y, 'sokoban', frames[i]);
-//     }
-
-// var atlasTexture = this.textures.get('round')
-//
-// var frames = atlasTexture.getFrameNames();
-//
-// for (var i = 0; i < frames.length; i++)
-// {
-//     var x = Phaser.Math.Between(0, 800);
-//     var y = Phaser.Math.Between(0, 600);
-//
-//     this.add.image(x, y, 'round', frames[i]);
-// }
 
     this.physics.add.collider(this.walker, this.platforms);
 
@@ -212,11 +202,17 @@ preload ()
     }, this);
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
     this.sound.play('newPlayerAudio');
-    console.log('navigator.userAgent', navigator.userAgent);
-
   }
 
   update(time: number, delta: number) {
+
+    if(this.isInitial) {
+        this.initialCount = this.initialCount + 1;
+        this.walker.x = this.walker.x + .5;
+        if(this.initialCount > 80) {
+            this.isInitial = false;
+        }
+    }
 
     if (this.isFirstLoop == true) {
 
