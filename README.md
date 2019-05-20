@@ -9,7 +9,7 @@ Local Deployment
       ```npm run dev```
       localhost:3000
 
-      ```npm run deploy```
+      ```npm run deploy``` (run and commit before pushing to Heroku)
 
 https://freesound.org
 https://kenney.nl/      
@@ -36,6 +36,9 @@ Heroku Deployment
       heroku buildpacks:set heroku/php
  - Push the app to Heroku:  
       git push heroku master
+      Heroku only has master, to push a different local branch use
+      git push heroku <local branch>:master) for example
+      git push heroku develop:master
  - Test app deployed to Heroku:  
       https://phaserfun.herokuapp.com/
 

@@ -4,6 +4,9 @@ class DesertScene extends Phaser.Scene {
   door: Phaser.Physics.Arcade.Sprite;
   blocker: Phaser.Physics.Arcade.Sprite;
   walker: Phaser.Physics.Arcade.Sprite;
+  genie: Phaser.GameObjects.Sprite;
+  license: Phaser.GameObjects.Sprite;
+
   ground: Phaser.Physics.Arcade.Image;
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
@@ -11,8 +14,11 @@ class DesertScene extends Phaser.Scene {
   jumpButton: Phaser.Physics.Arcade.Sprite;
   leftButton: Phaser.Physics.Arcade.Sprite;
   rightButton: Phaser.Physics.Arcade.Sprite;
-  coinsLabel: Phaser.GameObjects.Text;
-  coinsScore: Phaser.GameObjects.Text;
+  approvalsLabel: Phaser.GameObjects.Text;
+  approvalsScore: Phaser.GameObjects.Text;
+  walkerSpeak: Phaser.GameObjects.Text;
+  genieSpeak:  Phaser.GameObjects.Text;
+  genieSpeak2:  Phaser.GameObjects.Text;
 
   cursors: any;
   walkerDirection: string;
@@ -25,6 +31,7 @@ class DesertScene extends Phaser.Scene {
   isMobile: boolean;
   score: integer;
   openDoor: boolean;
+
 
   constructor() {
     super({
@@ -64,6 +71,7 @@ class DesertScene extends Phaser.Scene {
     this.load.image('desertBG', '/assets/sprites/colored_desert_640_341.png');
     this.load.image('tomb', '/assets/sprites/tomb.png');
     this.load.image('door', '/assets/sprites/door.png');
+    this.load.image('genie', '/assets/sprites/femaleGenie.png');
     this.load.image('blocker', '/assets/sprites/blocker.png');
     this.load.image('ground', 'assets/sprites/platformTransparent.png');
     this.load.image('coin', 'assets/sprites/coin.png');
@@ -71,7 +79,7 @@ class DesertScene extends Phaser.Scene {
     this.load.image('btnLeft', 'assets/sprites/button_left_grey.png');
     this.load.image('btnRight', 'assets/sprites/button_right_grey.png');
     this.load.atlas('walker', 'assets/sprites/leftRightWalk.png', 'assets/sprites/leftRightWalk.json');
-    //audios
+    this.load.image('license', 'assets/sprites/license.png');//audios
     //  Firefox doesn't support mp3 files, so use ogg
     this.load.audio('newPlayerAudio', ['assets/audio/mb_new.mp3', 'assets/audio/mb_new.ogg']);
     this.load.audio('coinAudio', ['assets/audio/mb_coin.mp3', 'assets/audio/mb_coin.ogg']);
@@ -82,15 +90,23 @@ class DesertScene extends Phaser.Scene {
   create() {
     this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'desertBG');
 
-    var style = { font: '20px Roboto', fill: 'grey' };
-    this.coinsLabel = this.add.text(10, 15, 'Coins:', style);
-    this.coinsScore = this.add.text(80, 15, '0', style);
-
     this.tomb = this.add.sprite(this.sys.canvas.width * .825, this.sys.canvas.height * -.083, 'tomb');
     this.tomb.setName('tomb');
     this.tomb.setOrigin(0, 0);
     this.tomb.setScale(1.25, 1.25);
     this.tomb.setInteractive(true, function() { });
+
+    this.genie = this.add.sprite(this.sys.canvas.width * .75, this.sys.canvas.height * .25, 'genie');
+    this.genie.setName('genie');
+    this.genie.setOrigin(0, 0);
+    this.genie.setScale(.3, .3);
+    this.genie.y = this.genie.y - 800; //hide off screen for now
+
+    this.license = this.add.sprite(this.sys.canvas.width * .20, this.sys.canvas.height * .25, 'license');
+    this.license.setName('license');
+    this.license.setOrigin(0, 0);
+    this.license.setScale(.25, .25);
+    this.license.y = this.license.y - 800; //hide off screen for now
 
     this.blocker = this.physics.add.staticSprite(this.sys.canvas.width * .999, this.sys.canvas.height * .695, 'blocker');
     this.blocker.setScale(1.35).refreshBody();
@@ -130,6 +146,9 @@ class DesertScene extends Phaser.Scene {
       frameRate: 10,
     });
     this.walkerDirection = 'right';
+
+    var walkerStyle = { font: '20px Roboto', fill: 'grey' };
+    this.walkerSpeak = this.add.text(this.walker.x + 20, this.walker.y - 40, '', walkerStyle);
 
     this.physics.add.collider(this.walker, this.platforms);
     this.physics.add.collider(this.walker, this.blocker);
@@ -190,17 +209,53 @@ class DesertScene extends Phaser.Scene {
       var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'coin');
       newCoin.setScale(.05).refreshBody();
       newCoin.setCollideWorldBounds(true);
+      newCoin.y = newCoin.y - 800; //hide off screen for now
       this.coins.push(newCoin);
     }, this);
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
     this.sound.play('newPlayerAudio');
     console.log('navigator.userAgent', navigator.userAgent);
 
+    //Scripted dialog
+    var timer = 0;
+    this.time.delayedCall(timer += 1500, this.jumpRight, null, this);
+    this.time.delayedCall(timer += 1000, this.jumpLeft, null, this);
+    this.time.delayedCall(timer += 1000, this.jumpRight, null, this);
+    this.time.delayedCall(timer += 1000, this.jumpLeft, null, this);
+    this.time.delayedCall(timer += 1000, this.jumpRight, null, this);
+    this.time.delayedCall(timer += 1000, this.jumpLeft, [true], this);
+    this.time.delayedCall(timer += 1000, this.introRight, null, this);
+    this.time.delayedCall(timer += 1000, this.introLeft, null, this);
+    this.time.delayedCall(timer += 1000, this.introRight, null, this);
+    this.time.delayedCall(timer += 1000, this.introLeft, [true], this);
+    this.time.delayedCall(timer += 1000, this.introRight, [true], this);
+    this.time.delayedCall(timer += 5000, this.showGenie, null, this);
+    this.time.delayedCall(timer += 1000, this.whoAreYou, null, this);
+    this.time.delayedCall(timer += 2000, this.genieIntro, null, this);
+    this.time.delayedCall(timer += 2500, this.whosaWhatsa, null, this);
+    this.time.delayedCall(timer += 2000, this.genieIntro2, null, this);
+    this.time.delayedCall(timer += 2500, this.genieIntro3, null, this);
+    this.time.delayedCall(timer += 3500, this.allTheCandy, null, this);
+    this.time.delayedCall(timer += 3000, this.grantedAccess, null, this);
+    this.time.delayedCall(timer += 4000, this.howDoWeDoThat, null, this);
+    this.time.delayedCall(timer += 3000, this.authorAndAthen, null, this);
+    this.time.delayedCall(timer += 5500, this.justCandy, null, this);
+    this.time.delayedCall(timer += 3000, this.authenticated, null, this);
+    this.time.delayedCall(timer += 3000, this.sureHereYouGo, null, this);
+    this.time.delayedCall(timer += 2000, this.showLicense, null, this);
+    this.time.delayedCall(timer += 2000, this.youAreAuthenticated, null, this);
+    this.time.delayedCall(timer += 3000, this.allEars, null, this);
+    this.time.delayedCall(timer += 2500, this.fiveChallenges, null, this);
+    this.time.delayedCall(timer += 5500, this.passedChallenges, null, this);
+    this.time.delayedCall(timer += 4000, this.aLotOfWork, null, this);
+    this.time.delayedCall(timer += 3500, this.importantWork, null, this);
+    this.time.delayedCall(timer += 5500, this.doThis, null, this);
+    this.time.delayedCall(timer += 3500, this.goodLuck, null, this);
+    this.time.delayedCall(timer += 4500, this.showCoins, null, this);
   }
 
   update(time: number, delta: number) {
 
-    console.log('walker x, y', this.walker.x, this.walker.y);
     if(this.walker.x > 618 && this.walker.y > 230) {
         this.scene.start('PyramidScene', {score: this.score});
     }
@@ -268,7 +323,7 @@ class DesertScene extends Phaser.Scene {
     this.sound.play('coinAudio');
     coin.destroy();
     this.score = this.score + 1;
-    this.coinsScore.text = this.score.toString();
+    //this.approvalsScore.text = this.score.toString();
     if(this.score >= 21) {
         //this.door.setY(this.door.y - 50);
         var sceneContext = this;
@@ -278,6 +333,214 @@ class DesertScene extends Phaser.Scene {
           sceneContext.sound.play('doorAudio');
       }, 1500);
     }
+  }
+
+  jumpRight() {
+      this.walkerSpeak.x = this.walker.x + 20;
+      this.walkerSpeak.y = this.walker.y - 40;
+      this.walkerSpeak.text = 'Candy!'
+      this.walker.setVelocityX(150); // move right
+      this.sound.play('jumpAudio');
+      this.walker.anims.play('walkRight', true); // play walk animation
+      this.walkerDirection = 'right';
+      this.isPlayerMoving = true;
+      this.walker.setVelocityY(-150);
+  }
+
+  jumpLeft(final) {
+      //var walkerStyle = { font: '20px Roboto', fill: 'red' };
+      this.walkerSpeak.x = this.walker.x + 20;
+      this.walkerSpeak.y = this.walker.y - 40;
+      this.walker.setVelocityX(-150); // move left
+      this.sound.play('jumpAudio');
+      this.walker.anims.play('walkLeft', true); // play walk animation
+      this.walkerDirection = 'left';
+      this.isPlayerMoving = true;
+      if(final) {
+           this.walker.setVelocityY(-100);
+            this.walker.setVelocityX(-100); // move left
+      } else {
+           this.walker.setVelocityY(-150);
+            this.walker.setVelocityX(-150); // move left
+      }
+
+  }
+
+  introRight(final) {
+      console.log('final', final);
+      this.walkerSpeak.x = this.walker.x + 20;
+      this.walkerSpeak.y = this.walker.y - 60;
+      this.walkerSpeak.text = '';
+      if(final == true) {
+          //this.walkerSpeak.text = 'No candy?!?!'
+          this.time.delayedCall(2000, function() {
+              this.walkerSpeak.text = 'I was told there would be candy, I see no candy!';
+          }, null, this);
+      }
+      // this.walker.setVelocityX(100); // move right
+      // this.walker.anims.play('walkRight', true); // play walk animation
+      this.walkerDirection = 'right';
+      // this.isPlayerMoving = true;
+  }
+
+  introLeft(final) {
+      this.walkerSpeak.text = '';
+      if(final == true) {
+          this.walkerSpeak.text = 'No candy?!?!'
+      }
+      // this.walker.setVelocityX(-100); // move right
+      // this.walker.anims.play('walkLeft', true); // play walk animation
+      this.walkerDirection = 'left';
+      // this.isPlayerMoving = true;
+  }
+
+  showGenie() {
+      console.log('in showGenie');
+      this.walkerSpeak.text = '';
+      this.genie.y = this.genie.y + 800;
+      var genieStyle = { font: '40px Roboto', fill: 'grey' };
+      this.genieSpeak = this.add.text(this.genie.x - 180, this.genie.y - 40, 'Welcome!', genieStyle);
+      this.time.delayedCall(750, function(){
+          this.walkerSpeak.text = '';
+          this.walker.setVelocityY(-200);
+          this.sound.play('jumpAudio');
+      }, null, this);
+
+  }
+
+  whoAreYou() {
+      this.genieSpeak.text = '';
+      this.walkerSpeak.text = 'Whoa, who are you!';
+  }
+
+  genieIntro() {
+      this.genieSpeak.setFontSize(20);
+      this.genieSpeak.x = this.genieSpeak.x - 80;
+      this.genieSpeak.text = 'I am the Genie of Secure Access Control';
+      this.walkerSpeak.text = '';
+  }
+
+  whosaWhatsa() {
+      this.genieSpeak.text = '';
+      this.walkerSpeak.text = 'The whosa whatsa?';
+  }
+
+  genieIntro2() {
+      this.genieSpeak.x = this.genieSpeak.x - 100;
+      this.genieSpeak.text = 'The Genie of Secure Access Control.';
+      this.walkerSpeak.text = '';
+  }
+
+  genieIntro3() {
+      this.walkerSpeak.text = '';
+      this.genieSpeak.text = 'I am here to grant you an access wish.';
+  }
+
+  allTheCandy() {
+      this.walkerSpeak.x = this.walkerSpeak.x - 75;
+      this.genieSpeak.text = '';
+      this.walkerSpeak.text = 'Great! I wish I had access to the candy, all the candy!';
+  }
+
+  grantedAccess() {
+      this.genieSpeak.x = this.genieSpeak.x - 100;
+      this.walkerSpeak.text = '';
+      this.genieSpeak.text = 'You shall receive your candy but first you must be granted access.';
+  }
+
+  howDoWeDoThat() {
+      this.walkerSpeak.text = 'What?!?! How does that happen?';
+      this.genieSpeak.text = '';
+  }
+
+  authorAndAthen() {
+      this.walkerSpeak.text = '';
+      this.genieSpeak.text = 'You must be first Authenticated and then Authorized.';
+      this.time.delayedCall(3000, function(){
+          this.genieSpeak.x = this.genieSpeak.x + 20
+          this.genieSpeak.y = this.genieSpeak.y + 10
+          this.genieSpeak.text = 'These are the two hallmarks of any good access control system.';
+      }, null, this);
+  }
+
+  justCandy() {
+      this.walkerSpeak.x = this.walkerSpeak.x - 40;
+      this.walkerSpeak.text = 'It is just candy but I will be play along, where do we start?';
+      this.genieSpeak.text = '';
+  }
+
+  authenticated() {
+      this.walkerSpeak.text = '';
+      this.genieSpeak.text = 'You must first be authenticated, do you have a valid ID?';
+  }
+
+  sureHereYouGo() {
+      this.genieSpeak.text = '';
+      this.walkerSpeak.text = 'Sure, here you go.';
+  }
+
+  showLicense() {
+      this.walkerSpeak.text = '';
+      this.license.y = this.license.y + 800;
+  }
+
+  youAreAuthenticated() {
+      this.license.destroy();
+      this.genieSpeak.text = 'Perfect, you are officially Authenticated, now you need to be authorized.';
+  }
+
+  allEars() {
+      this.genieSpeak.text = '';
+      this.walkerSpeak.text = 'I am all ears, how do we do that?';
+  }
+
+  fiveChallenges() {
+      this.genieSpeak.x = this.genieSpeak.x - 25;
+      this.walkerSpeak.text = '';
+      this.genieSpeak.text = 'You must collect five authorization approvals by entering five challenges.';
+  }
+
+  passedChallenges() {
+      this.genieSpeak.text = 'Once you have passed all five challenges ';
+      var genieStyle = { font: '40px Roboto', fill: 'grey' };
+      this.genieSpeak2 = this.add.text(this.genieSpeak.x + 40, this.genieSpeak.y + 30, 'you will be granted access to your candy.', this.genieSpeak.style);
+  }
+
+  aLotOfWork() {
+      this.genieSpeak.text = '';
+      this.genieSpeak2.text = '';
+      this.walkerSpeak.text = 'Seems like a lot of work just to access some candy.';
+  }
+
+  importantWork() {
+      this.genieSpeak.text = 'Yes, it is a lot of work, a lot of very important work.';
+      this.genieSpeak2.text = 'Secure access control is mission critical!';
+      this.walkerSpeak.text = '';
+  }
+
+  doThis() {
+      this.genieSpeak.text = '';
+      this.genieSpeak2.text = '';
+      this.walkerSpeak.text = 'Ok, let\'s do this.';
+  }
+
+  goodLuck() {
+      this.genieSpeak.text = 'Welcome to the first challenge and good luck!';
+      this.genieSpeak2.text = 'Hint: get all the coins.';
+      this.walkerSpeak.text = '';
+  }
+
+  showCoins() {
+
+      var style = { font: '20px Roboto', fill: 'grey' };
+      this.approvalsLabel = this.add.text(10, 15, 'Approvals:', style);
+      this.approvalsScore = this.add.text(80, 15, '0 / 5', style);
+      this.genieSpeak.text = '';
+      this.genieSpeak2.text = '';
+      this.genie.destroy();
+      this.coins.forEach(function(value) {
+          value.y = value.y + 800;
+      }, this);
   }
 }
 

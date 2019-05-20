@@ -75,9 +75,9 @@ preload ()
 
   create() {
 
-    var style = { font: '20px Roboto', fill: 'grey' };
-    this.coinsLabel = this.add.text(10, 15, 'Coins:', style);
-    this.coinsScore = this.add.text(80, 15, this.score.toString(), style);
+    // var style = { font: '20px Roboto', fill: 'grey' };
+    // this.coinsLabel = this.add.text(10, 15, 'Coins:', style);
+    // this.coinsScore = this.add.text(80, 15, this.score.toString(), style);
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
@@ -272,7 +272,7 @@ preload ()
     this.sound.play('coinAudio');
     coin.destroy();
     this.score = this.score + 1;
-    this.coinsScore.text = this.score.toString();
+    //this.coinsScore.text = this.score.toString();
     if(this.score >= 41) {
         //this.door.setY(this.door.y - 50);
         var sceneContext = this;
