@@ -195,6 +195,11 @@ class DesertScene extends Phaser.Scene {
       this.rightButton.setInteractive().on('pointerout', function(pointer, localX, localY, event) {
         this.moveRight = false;
       }, this);
+
+      //hide the buttons
+      this.jumpButton.y = this.jumpButton.y - 800;
+      this.leftButton.y = this.leftButton.y - 800;
+      this.rightButton.y = this.rightButton.y - 800;
     }
 
     //Coins
@@ -213,7 +218,6 @@ class DesertScene extends Phaser.Scene {
       this.coins.push(newCoin);
     }, this);
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
-    this.sound.play('newPlayerAudio');
     console.log('navigator.userAgent', navigator.userAgent);
 
     //Scripted dialog
@@ -251,7 +255,8 @@ class DesertScene extends Phaser.Scene {
     this.time.delayedCall(timer += 3500, this.importantWork, null, this);
     this.time.delayedCall(timer += 5500, this.doThis, null, this);
     this.time.delayedCall(timer += 3500, this.goodLuck, null, this);
-    this.time.delayedCall(timer += 4500, this.showCoins, null, this);
+    this.time.delayedCall(timer += 4000, this.hideGenie, null, this);
+    this.time.delayedCall(timer += 1500, this.showCoins, null, this);
   }
 
   update(time: number, delta: number) {
@@ -326,13 +331,42 @@ class DesertScene extends Phaser.Scene {
     //this.approvalsScore.text = this.score.toString();
     if(this.score >= 21) {
         //this.door.setY(this.door.y - 50);
-        var sceneContext = this;
-        setTimeout(function() {
-          sceneContext.openDoor = true;
-          sceneContext.blocker.destroy();
-          sceneContext.sound.play('doorAudio');
-      }, 1500);
+        var timer2 = 0;
+        this.time.delayedCall(timer2 += 2000, this.showGenieCongrats, null, this);
+        this.time.delayedCall(timer2 += 4000, this.genieSecurityTip, null, this);
+        this.time.delayedCall(timer2 += 6000, this.genieGoodLuck, null, this);
+        this.time.delayedCall(timer2 += 4000, this.startDoorOpen, null, this);
     }
+  }
+
+  showGenieCongrats() {
+      this.genie.y = this.genie.y + 800;
+      this.genieSpeak.text = 'Congrats! You have completed your first challenge.';
+      this.genieSpeak2.text = 'Here is your first authorization approval.';
+      this.approvalsScore.text = '1/5';
+      setTimeout(function() {
+          this.approvalsScore.text = '1/5';
+      }, 2000, this);
+  }
+
+  startDoorOpen() {
+      this.openDoor = true;
+      this.blocker.destroy();
+      this.sound.play('doorAudio');
+  }
+
+  genieSecurityTip() {
+      this.genieSpeak.y = this.genieSpeak.y + 60;
+      this.genieSpeak2.y = this.genieSpeak2.y + 60;
+      this.genieSpeak.text = 'The Genie says: Always secure your passwords.';
+      this.genieSpeak2.text = 'Never share your passwords with anyone!';
+  }
+
+  genieGoodLuck() {
+      this.genieSpeak.y = this.genieSpeak.y + 30;
+      this.genieSpeak2.y = this.genieSpeak2.y + 30;
+      this.genieSpeak.text = 'Good luck on your next challenge!';
+      this.genieSpeak2.text = '';
   }
 
   jumpRight() {
@@ -530,17 +564,26 @@ class DesertScene extends Phaser.Scene {
       this.walkerSpeak.text = '';
   }
 
-  showCoins() {
-
-      var style = { font: '20px Roboto', fill: 'grey' };
-      this.approvalsLabel = this.add.text(10, 15, 'Approvals:', style);
-      this.approvalsScore = this.add.text(80, 15, '0 / 5', style);
+  hideGenie() {
       this.genieSpeak.text = '';
       this.genieSpeak2.text = '';
-      this.genie.destroy();
+      this.genie.y = this.genie.y - 800;
+  }
+
+  showCoins() {
+      this.sound.play('newPlayerAudio');
+      var style = { font: '20px Roboto', fill: 'grey' };
+      this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
+      this.approvalsScore = this.add.text(170, 15, '0/5', style);
       this.coins.forEach(function(value) {
           value.y = value.y + 800;
       }, this);
+      if (this.isMobile == true) {
+          //show the buttons
+          this.jumpButton.y = this.jumpButton.y + 800;
+          this.leftButton.y = this.leftButton.y + 800;
+          this.rightButton.y = this.rightButton.y + 800;
+      }
   }
 }
 
