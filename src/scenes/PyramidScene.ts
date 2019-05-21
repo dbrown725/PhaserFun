@@ -1,5 +1,6 @@
 class PyramidScene extends Phaser.Scene {
   walker: Phaser.Physics.Arcade.Sprite;
+  genie: Phaser.GameObjects.Sprite;
   ground: Phaser.Physics.Arcade.Image;
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
@@ -7,8 +8,10 @@ class PyramidScene extends Phaser.Scene {
   jumpButton: Phaser.Physics.Arcade.Sprite;
   leftButton: Phaser.Physics.Arcade.Sprite;
   rightButton: Phaser.Physics.Arcade.Sprite;
-  coinsLabel: Phaser.GameObjects.Text;
-  coinsScore: Phaser.GameObjects.Text;
+  approvalsLabel: Phaser.GameObjects.Text;
+  approvalsScore: Phaser.GameObjects.Text;
+  genieText: Phaser.GameObjects.Text;
+  genieText2: Phaser.GameObjects.Text;
   gameOver: Phaser.GameObjects.Text;
   bricks: Phaser.Physics.Arcade.Image[];
   doorInterior: Phaser.Physics.Arcade.Sprite;
@@ -75,9 +78,12 @@ preload ()
 
   create() {
 
-    // var style = { font: '20px Roboto', fill: 'grey' };
-    // this.coinsLabel = this.add.text(10, 15, 'Coins:', style);
-    // this.coinsScore = this.add.text(80, 15, this.score.toString(), style);
+    var style = { font: '20px Roboto', fill: 'grey' };
+    this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
+    this.approvalsScore = this.add.text(170, 15, '1/5', style);
+
+    this.genieText = this.add.text(250, 10, '', style);
+    this.genieText2 = this.add.text(300, 30, '', style);
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
@@ -118,9 +124,9 @@ preload ()
     //Coins
     var brickLocation = [[4, 2.65], [5, 2.65], [6, 2.65], [7, 2.65],
         [8, 2.65], [9, 2.65], [10, 2.65], [11, 2.65], [12, 2.65], [13, 2.65]];
-    brickLocation.push([15, 5], [16, 5.5], [17, 6], [18, 6],  [19, 6], [20, 6], [21, 6]);
-    brickLocation.push([4, 8], [5, 8], [6, 8], [7, 8],
-        [8, 8], [9, 8], [10, 8], [11, 8], [12, 8], [13, 7.5]);
+    brickLocation.push([15, 5], [16, 5], [17, 5], [18, 5],  [19, 5], [20, 5], [21, 5]);
+    brickLocation.push([4, 7], [5, 7], [6, 7], [7, 7],
+        [8, 7], [9, 7], [10, 7], [11, 7], [12, 7]);
 
     this.bricks = [];
     brickLocation.forEach(function(value) {
@@ -130,6 +136,12 @@ preload ()
       this.bricks.push(newBrick);
     }, this);
     this.physics.add.collider(this.walker, this.bricks);
+
+    this.genie = this.add.sprite(this.sys.canvas.width * .90, this.sys.canvas.height * .09, 'genie');
+    this.genie.setName('genie');
+    this.genie.setOrigin(0, 0);
+    this.genie.setScale(.2, .2);
+    this.genie.y = this.genie.y - 800; //hide off screen for now
 
     this.doorInterior = this.physics.add.staticSprite(5, this.sys.canvas.height * .3, 'doorInterior');
     this.doorInterior.setScale(1.35).refreshBody();
@@ -187,11 +199,11 @@ preload ()
     }
 
     //Coins
-    var coinLocation = [[2, .3]];
-    coinLocation.push([1.5, .4], [2.5, .4]);
+
+    var coinLocation = [[1.5, .4], [2.5, .4]];
     coinLocation.push([1, .5], [2, .5], [3, .5]);
     coinLocation.push([.5, .6], [1.5, .6], [2.5, .6], [3.5, .6]);
-    coinLocation.push([.5, .1], [1.5, .1], [2.5, .1], [3.5, .1], [4.5, .1]);
+    coinLocation.push([.5, .2], [1.5, .2], [2.5, .2], [3.5, .2], [4.5, .2]);
     coinLocation.push([6.7, .37], [7.35, .31], [8, .27], [8.75, .27], [9.5, .27]);
     this.coins = [];
     coinLocation.forEach(function(value) {
@@ -273,12 +285,20 @@ preload ()
     coin.destroy();
     this.score = this.score + 1;
     //this.coinsScore.text = this.score.toString();
-    if(this.score >= 41) {
+    if(this.score >= 25) { //41
         //this.door.setY(this.door.y - 50);
-        var sceneContext = this;
+        var sceneThis = this;
         setTimeout(function() {
-            sceneContext.gameOver.text = "Game Over";
-      }, 1500);
+            console.log('in timeout ******');
+            sceneThis.genie.y = sceneThis.genie.y + 800;
+        }, 1500);
+        setTimeout(function() {
+            sceneThis.genieText.text = 'Congrats on your second access approval.';
+            sceneThis.approvalsScore.text = '2/5';
+        }, 3000);
+        setTimeout(function() {
+            sceneThis.genieText.text = 'Genie says: Always lock your computer screen.';
+        }, 7000);
     }
   }
 }
