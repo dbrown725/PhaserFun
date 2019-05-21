@@ -499,7 +499,7 @@ class DesertScene extends Phaser.Scene {
 
   justCandy() {
       this.walkerSpeak.x = this.walkerSpeak.x - 40;
-      this.walkerSpeak.text = 'It is just candy but I will be play along, where do we start?';
+      this.walkerSpeak.text = 'It is just candy but I will play along, where do we start?';
       this.genieSpeak.text = '';
   }
 

@@ -16,6 +16,8 @@ class PyramidScene extends Phaser.Scene {
   bricks: Phaser.Physics.Arcade.Image[];
   doorInterior: Phaser.Physics.Arcade.Sprite;
   doorInteriorBlack: Phaser.Physics.Arcade.Sprite;
+  doorInterior2: Phaser.Physics.Arcade.Sprite;
+  doorInteriorBlack2: Phaser.Physics.Arcade.Sprite;
 
   cursors: any;
   walkerDirection: string;
@@ -149,8 +151,12 @@ preload ()
     this.doorInteriorBlack = this.physics.add.staticSprite(5, this.sys.canvas.height * .15, 'doorInteriorBlack');
     this.doorInteriorBlack.setScale(1.35).refreshBody();
 
-    var gameOverStyle = { font: '100px Roboto', fill: 'red' };
-    this.gameOver = this.add.text(this.sys.canvas.width * .12, this.sys.canvas.height * .25, '', gameOverStyle);
+    this.doorInterior2 = this.physics.add.staticSprite(this.sys.canvas.width - 10, this.sys.canvas.height * .7, 'doorInterior');
+    this.doorInterior2.setScale(1.35).refreshBody();
+    this.doorInterior2.y = this.doorInterior2.y - 800;
+
+    var gameOverStyle = { font: '35px Roboto', fill: 'red' };
+    this.gameOver = this.add.text(this.sys.canvas.width * .05, this.sys.canvas.height * .35, '', gameOverStyle);
 
     this.physics.add.collider(this.walker, this.platforms);
 
@@ -218,6 +224,10 @@ preload ()
 
   update(time: number, delta: number) {
 
+    if(this.walker.x > 618 && this.walker.y > 230 ) {
+        console.log('this.walker.x', this.walker.x, 'this.walker.y', this.walker.y);
+        this.gameOver.text = 'Challenge Three Under Construction'
+    }
     if(this.isInitial) {
         this.initialCount = this.initialCount + 1;
         this.walker.x = this.walker.x + .5;
@@ -285,7 +295,10 @@ preload ()
     coin.destroy();
     this.score = this.score + 1;
     //this.coinsScore.text = this.score.toString();
-    if(this.score >= 25) { //41
+    if(this.score >= 21) {
+        this.doorInterior.y = this.doorInterior.y - 800;
+    }
+    if(this.score >= 40) { //40
         //this.door.setY(this.door.y - 50);
         var sceneThis = this;
         setTimeout(function() {
@@ -298,6 +311,8 @@ preload ()
         }, 3000);
         setTimeout(function() {
             sceneThis.genieText.text = 'Genie says: Always lock your computer screen.';
+            sceneThis.doorInterior2.y = sceneThis.doorInterior2.y + 800;
+            sceneThis.sound.play('doorAudio');
         }, 7000);
     }
   }
