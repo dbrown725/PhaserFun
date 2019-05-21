@@ -249,7 +249,7 @@ class DesertScene extends Phaser.Scene {
     this.time.delayedCall(timer += 2000, this.showLicense, null, this);
     this.time.delayedCall(timer += 2000, this.youAreAuthenticated, null, this);
     this.time.delayedCall(timer += 3000, this.allEars, null, this);
-    this.time.delayedCall(timer += 2500, this.fiveChallenges, null, this);
+    this.time.delayedCall(timer += 3500, this.fiveChallenges, null, this);
     this.time.delayedCall(timer += 5500, this.passedChallenges, null, this);
     this.time.delayedCall(timer += 4000, this.aLotOfWork, null, this);
     this.time.delayedCall(timer += 3500, this.importantWork, null, this);
@@ -450,7 +450,7 @@ class DesertScene extends Phaser.Scene {
   genieIntro() {
       this.genieSpeak.setFontSize(20);
       this.genieSpeak.x = this.genieSpeak.x - 80;
-      this.genieSpeak.text = 'I am the Genie of Secure Access Control';
+      this.genieSpeak.text = 'I am the Genie of Secure Access Management';
       this.walkerSpeak.text = '';
   }
 
@@ -461,7 +461,7 @@ class DesertScene extends Phaser.Scene {
 
   genieIntro2() {
       this.genieSpeak.x = this.genieSpeak.x - 100;
-      this.genieSpeak.text = 'The Genie of Secure Access Control.';
+      this.genieSpeak.text = 'The Genie of Secure Access Management.';
       this.walkerSpeak.text = '';
   }
 
@@ -493,7 +493,7 @@ class DesertScene extends Phaser.Scene {
       this.time.delayedCall(3000, function(){
           this.genieSpeak.x = this.genieSpeak.x + 20
           this.genieSpeak.y = this.genieSpeak.y + 10
-          this.genieSpeak.text = 'These are the two hallmarks of any good access control system.';
+          this.genieSpeak.text = 'These are the two hallmarks of good access management system.';
       }, null, this);
   }
 
@@ -548,7 +548,7 @@ class DesertScene extends Phaser.Scene {
 
   importantWork() {
       this.genieSpeak.text = 'Yes, it is a lot of work, a lot of very important work.';
-      this.genieSpeak2.text = 'Secure access control is mission critical!';
+      this.genieSpeak2.text = 'Secure access management is mission critical!';
       this.walkerSpeak.text = '';
   }
 
