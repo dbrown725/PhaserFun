@@ -176,6 +176,7 @@ class DesertScene extends Phaser.Scene {
       this.leftButton.setScale(1).refreshBody();
       this.leftButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveLeft = true;
+        this.moveRight = false;
       }, this);
       this.leftButton.setInteractive().on('pointerup', function(pointer, localX, localY, event) {
         this.moveLeft = false;
@@ -188,6 +189,7 @@ class DesertScene extends Phaser.Scene {
       this.rightButton.setScale(1).refreshBody();
       this.rightButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveRight = true;
+        this.moveLeft = false;
       }, this);
       this.rightButton.setInteractive().on('pointerup', function(pointer, localX, localY, event) {
         this.moveRight = false;
@@ -493,7 +495,7 @@ class DesertScene extends Phaser.Scene {
       this.time.delayedCall(3000, function(){
           this.genieSpeak.x = this.genieSpeak.x + 20
           this.genieSpeak.y = this.genieSpeak.y + 10
-          this.genieSpeak.text = 'These are the two hallmarks of good access management system.';
+          this.genieSpeak.text = 'These are the two hallmarks of good access management.';
       }, null, this);
   }
 

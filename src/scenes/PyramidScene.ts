@@ -183,6 +183,7 @@ preload ()
       this.leftButton.setScale(1).refreshBody();
       this.leftButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveLeft = true;
+        this.moveRight = false;
       }, this);
       this.leftButton.setInteractive().on('pointerup', function(pointer, localX, localY, event) {
         this.moveLeft = false;
@@ -195,6 +196,7 @@ preload ()
       this.rightButton.setScale(1).refreshBody();
       this.rightButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveRight = true;
+        this.moveLeft = false;
       }, this);
       this.rightButton.setInteractive().on('pointerup', function(pointer, localX, localY, event) {
         this.moveRight = false;
