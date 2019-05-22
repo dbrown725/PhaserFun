@@ -452,7 +452,7 @@ class DesertScene extends Phaser.Scene {
   genieIntro() {
       this.genieSpeak.setFontSize(20);
       this.genieSpeak.x = this.genieSpeak.x - 80;
-      this.genieSpeak.text = 'I am the Genie of Secure Access Management';
+      this.genieSpeak.text = 'I am the Genie of Secure Access Management.';
       this.walkerSpeak.text = '';
   }
 
