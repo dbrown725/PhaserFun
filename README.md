@@ -39,6 +39,7 @@ Heroku Deployment
       Heroku only has master, to push a different local branch use
       git push heroku <local branch>:master) for example
       git push heroku develop:master
+      git push heroku feature/securityGuide:master
  - Test app deployed to Heroku:  
       https://phaserfun.herokuapp.com/
 

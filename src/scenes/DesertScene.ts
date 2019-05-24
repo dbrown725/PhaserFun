@@ -6,6 +6,7 @@ class DesertScene extends Phaser.Scene {
   walker: Phaser.Physics.Arcade.Sprite;
   genie: Phaser.GameObjects.Sprite;
   license: Phaser.GameObjects.Sprite;
+  coin: Phaser.Physics.Arcade.Sprite;
 
   ground: Phaser.Physics.Arcade.Image;
   platformsContainer: Phaser.GameObjects.Container;
@@ -79,7 +80,10 @@ class DesertScene extends Phaser.Scene {
     this.load.image('btnLeft', 'assets/sprites/button_left_grey.png');
     this.load.image('btnRight', 'assets/sprites/button_right_grey.png');
     this.load.atlas('walker', 'assets/sprites/leftRightWalk.png', 'assets/sprites/leftRightWalk.json');
-    this.load.image('license', 'assets/sprites/license.png');//audios
+    this.load.image('license', 'assets/sprites/license.png');
+    this.load.atlasXML('jumperSprites', 'assets/sprites/spritesheet_jumper.png', 'assets/sprites/spritesheet_jumper.xml');
+
+    //audios
     //  Firefox doesn't support mp3 files, so use ogg
     this.load.audio('newPlayerAudio', ['assets/audio/mb_new.mp3', 'assets/audio/mb_new.ogg']);
     this.load.audio('coinAudio', ['assets/audio/mb_coin.mp3', 'assets/audio/mb_coin.ogg']);
@@ -205,6 +209,12 @@ class DesertScene extends Phaser.Scene {
     }
 
     //Coins
+    this.anims.create({
+      key: 'coinsSpin',
+      frames: this.anims.generateFrameNames('jumperSprites', { prefix: 'gold_', suffix: '.png', start: 1, end: 4, zeroPad: 1 }),
+      frameRate: 2,
+      repeat: -1
+    });
     var coinLocation = [[5, .2]];
     coinLocation.push([4.5, .3], [5.5, .3]);
     coinLocation.push([4, .4], [5, .4], [6, .4]);
@@ -212,13 +222,17 @@ class DesertScene extends Phaser.Scene {
     coinLocation.push([3, .6], [4, .6], [5, .6], [6, .6], [7, .6]);
     coinLocation.push([2.5, .7], [3.5, .7], [4.5, .7], [5.5, .7], [6.5, .7], [7.5, .7]);
     this.coins = [];
+    var min=1;
+    var max=1000;
     coinLocation.forEach(function(value) {
-      var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'coin');
-      newCoin.setScale(.05).refreshBody();
+      var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'jumperSprites', 'gold_1.png');
+      newCoin.setScale(.3).refreshBody();
       newCoin.setCollideWorldBounds(true);
-      newCoin.y = newCoin.y - 800; //hide off screen for now
+      newCoin.y = newCoin.y - 800;
+      this.time.delayedCall(Math.random() * (+max - +min) + +min, this.setCoinSpin, [newCoin], this);
       this.coins.push(newCoin);
     }, this);
+
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
     console.log('navigator.userAgent', navigator.userAgent);
 
@@ -326,6 +340,10 @@ class DesertScene extends Phaser.Scene {
     }
   }
 
+  setCoinSpin(coin) {
+    coin.anims.play('coinsSpin', true);
+  }
+
   coinCollision(walker, coin) {
     this.sound.play('coinAudio');
     coin.destroy();
@@ -345,10 +363,9 @@ class DesertScene extends Phaser.Scene {
       this.genie.y = this.genie.y + 800;
       this.genieSpeak.text = 'Congrats! You have completed your first challenge.';
       this.genieSpeak2.text = 'Here is your first authorization approval.';
-      this.approvalsScore.text = '1/5';
-      setTimeout(function() {
+      this.time.delayedCall(2000, function(){
           this.approvalsScore.text = '1/5';
-      }, 2000, this);
+      }, null, this);
   }
 
   startDoorOpen() {
@@ -432,6 +449,7 @@ class DesertScene extends Phaser.Scene {
 
   showGenie() {
       console.log('in showGenie');
+      //this.cameras.main.shake(500);
       this.walkerSpeak.text = '';
       this.genie.y = this.genie.y + 800;
       var genieStyle = { font: '40px Roboto', fill: 'grey' };
