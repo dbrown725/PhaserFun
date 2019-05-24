@@ -207,17 +207,32 @@ preload ()
     }
 
     //Coins
-
+    this.anims.create({
+        key: 'coinsSpin',
+        frames: [
+            { key: 'gold1' },
+            { key: 'gold2' },
+            { key: 'gold3' },
+            { key: 'gold4' },
+            { key: 'gold3flip' },
+            { key: 'gold2flip'}
+        ],
+        frameRate: 5,
+        repeat: -1
+    });
     var coinLocation = [[1.5, .4], [2.5, .4]];
     coinLocation.push([1, .5], [2, .5], [3, .5]);
     coinLocation.push([.5, .6], [1.5, .6], [2.5, .6], [3.5, .6]);
     coinLocation.push([.5, .2], [1.5, .2], [2.5, .2], [3.5, .2], [4.5, .2]);
     coinLocation.push([6.7, .37], [7.35, .31], [8, .27], [8.75, .27], [9.5, .27]);
     this.coins = [];
+    var min=1;
+    var max=1000;
     coinLocation.forEach(function(value) {
-      var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'coin');
-      newCoin.setScale(.05).refreshBody();
+      var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'jumperSprites', 'gold_1.png');
+      newCoin.setScale(.3).refreshBody();
       newCoin.setCollideWorldBounds(true);
+      this.time.delayedCall(Math.random() * (+max - +min) + +min, this.setCoinSpin, [newCoin], this);
       this.coins.push(newCoin);
     }, this);
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
@@ -290,6 +305,10 @@ preload ()
         this.walker.setVelocityX(-150);
       }
     }
+  }
+
+  setCoinSpin(coin) {
+    coin.anims.play('coinsSpin', true);
   }
 
   coinCollision(walker, coin) {
