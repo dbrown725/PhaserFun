@@ -7,6 +7,7 @@ class DesertScene extends Phaser.Scene {
   genie: Phaser.GameObjects.Sprite;
   license: Phaser.GameObjects.Sprite;
   coin: Phaser.Physics.Arcade.Sprite;
+  smoke: Phaser.GameObjects.Sprite;
 
   ground: Phaser.Physics.Arcade.Image;
   platformsContainer: Phaser.GameObjects.Container;
@@ -32,6 +33,7 @@ class DesertScene extends Phaser.Scene {
   isMobile: boolean;
   score: integer;
   openDoor: boolean;
+  growSmoke: boolean
 
 
   constructor() {
@@ -47,6 +49,7 @@ class DesertScene extends Phaser.Scene {
       this.isMobile = false;
       this.score = 0;
       this.openDoor = false;
+      this.growSmoke = false;
 
       //Allows for default pointer plus one. Needed so the jump button
       //and a left or right button can be pressed at the same time
@@ -88,6 +91,7 @@ class DesertScene extends Phaser.Scene {
     this.load.image('gold3flip', 'assets/sprites/gold_3_flip.png');
     this.load.image('gold2flip', 'assets/sprites/gold_2_flip.png');
     this.load.atlasXML('jumperSprites', 'assets/sprites/spritesheet_jumper.png', 'assets/sprites/spritesheet_jumper.xml');
+    this.load.image('smoke', '/assets/sprites/smoke.png');
 
     //audios
     //  Firefox doesn't support mp3 files, so use ogg
@@ -111,6 +115,9 @@ class DesertScene extends Phaser.Scene {
     this.genie.setOrigin(0, 0);
     this.genie.setScale(.3, .3);
     this.genie.y = this.genie.y - 800; //hide off screen for now
+
+    this.smoke = this.add.sprite(this.sys.canvas.width * .80, this.sys.canvas.height * .5, 'smoke');
+    this.smoke.setScale(.001);
 
     this.license = this.add.sprite(this.sys.canvas.width * .20, this.sys.canvas.height * .25, 'license');
     this.license.setName('license');
@@ -217,12 +224,12 @@ class DesertScene extends Phaser.Scene {
     this.anims.create({
         key: 'coinsSpin',
         frames: [
-            { key: 'gold1' },
-            { key: 'gold2' },
-            { key: 'gold3' },
-            { key: 'gold4' },
-            { key: 'gold3flip' },
-            { key: 'gold2flip'}
+            { key: 'gold1', frame: '' },
+            { key: 'gold2', frame: '' },
+            { key: 'gold3', frame: '' },
+            { key: 'gold4', frame: '' },
+            { key: 'gold3flip', frame: '' },
+            { key: 'gold2flip', frame: ''}
         ],
         frameRate: 5,
         repeat: -1
@@ -285,10 +292,24 @@ class DesertScene extends Phaser.Scene {
     this.time.delayedCall(timer += 5500, this.doThis, null, this);
     this.time.delayedCall(timer += 3500, this.goodLuck, null, this);
     this.time.delayedCall(timer += 4000, this.hideGenie, null, this);
-    this.time.delayedCall(timer += 1500, this.showCoins, null, this);
+    this.time.delayedCall(timer += 2500, this.showCoins, null, this);
   }
 
   update(time: number, delta: number) {
+    if(this.growSmoke) {
+      if(this.smoke.scaleX < 4) {
+        this.smoke.setScale(4);
+      }
+      if (this.smoke.scaleX <= 15 ) {
+        this.smoke.alpha = this.smoke.alpha - .01;
+        this.smoke.scaleX = this.smoke.scaleX * 1.01;
+        this.smoke.scaleY = this.smoke.scaleY * 1.01;
+      } else {
+        this.growSmoke = false;
+        this.smoke.setScale(.001);
+        this.smoke.setAlpha(1);
+      }
+    }
 
     if(this.walker.x > 618 && this.walker.y > 230) {
         this.scene.start('PyramidScene', {score: this.score});
@@ -374,6 +395,7 @@ class DesertScene extends Phaser.Scene {
 
   showGenieCongrats() {
       this.genie.y = this.genie.y + 800;
+      this.growSmoke = true;
       this.genieSpeak.text = 'Congrats! You have completed your first challenge.';
       this.genieSpeak2.text = 'Here is your first authorization approval.';
       this.time.delayedCall(2000, function(){
@@ -382,6 +404,8 @@ class DesertScene extends Phaser.Scene {
   }
 
   startDoorOpen() {
+      this.genie.y = this.genie.y - 800;
+      this.growSmoke = true;
       this.openDoor = true;
       this.blocker.destroy();
       this.sound.play('doorAudio');
@@ -433,20 +457,15 @@ class DesertScene extends Phaser.Scene {
   }
 
   introRight(final) {
-      console.log('final', final);
       this.walkerSpeak.x = this.walker.x + 20;
       this.walkerSpeak.y = this.walker.y - 60;
       this.walkerSpeak.text = '';
       if(final == true) {
-          //this.walkerSpeak.text = 'No candy?!?!'
           this.time.delayedCall(2000, function() {
               this.walkerSpeak.text = 'I was told there would be candy, I see no candy!';
           }, null, this);
       }
-      // this.walker.setVelocityX(100); // move right
-      // this.walker.anims.play('walkRight', true); // play walk animation
       this.walkerDirection = 'right';
-      // this.isPlayerMoving = true;
   }
 
   introLeft(final) {
@@ -461,8 +480,8 @@ class DesertScene extends Phaser.Scene {
   }
 
   showGenie() {
-      console.log('in showGenie');
       //this.cameras.main.shake(500);
+      this.growSmoke = true;
       this.walkerSpeak.text = '';
       this.genie.y = this.genie.y + 800;
       var genieStyle = { font: '40px Roboto', fill: 'grey' };
@@ -601,6 +620,7 @@ class DesertScene extends Phaser.Scene {
       this.genieSpeak.text = '';
       this.genieSpeak2.text = '';
       this.genie.y = this.genie.y - 800;
+      this.growSmoke = true;
   }
 
   showCoins() {

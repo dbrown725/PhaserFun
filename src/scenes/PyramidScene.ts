@@ -18,6 +18,7 @@ class PyramidScene extends Phaser.Scene {
   doorInteriorBlack: Phaser.Physics.Arcade.Sprite;
   doorInterior2: Phaser.Physics.Arcade.Sprite;
   doorInteriorBlack2: Phaser.Physics.Arcade.Sprite;
+  smoke: Phaser.GameObjects.Sprite;
 
   cursors: any;
   walkerDirection: string;
@@ -32,6 +33,7 @@ class PyramidScene extends Phaser.Scene {
   openDoor: boolean;
   isInitial: boolean;
   initialCount: integer;
+  growSmoke = true;
 
   constructor() {
     super({
@@ -44,11 +46,11 @@ class PyramidScene extends Phaser.Scene {
       this.isPlayerMoving = false;
       this.isFirstLoop = true;
       this.isMobile = false;
-      console.log('data', data);
       this.score = data.score;
       this.openDoor = false;
       this.isInitial = true;
       this.initialCount = 0;
+      this.growSmoke = false;
 
       //Allows for default pointer plus one. Needed so the jump button
       //and a left or right button can be pressed at the same time
@@ -145,6 +147,9 @@ preload ()
     this.genie.setScale(.2, .2);
     this.genie.y = this.genie.y - 800; //hide off screen for now
 
+    this.smoke = this.add.sprite(this.sys.canvas.width * .95, this.sys.canvas.height * .24, 'smoke');
+    this.smoke.setScale(.001);
+
     this.doorInterior = this.physics.add.staticSprite(5, this.sys.canvas.height * .3, 'doorInterior');
     this.doorInterior.setScale(1.35).refreshBody();
 
@@ -210,12 +215,12 @@ preload ()
     this.anims.create({
         key: 'coinsSpin',
         frames: [
-            { key: 'gold1' },
-            { key: 'gold2' },
-            { key: 'gold3' },
-            { key: 'gold4' },
-            { key: 'gold3flip' },
-            { key: 'gold2flip'}
+            { key: 'gold1', frame: '' },
+            { key: 'gold2', frame: '' },
+            { key: 'gold3', frame: '' },
+            { key: 'gold4', frame: '' },
+            { key: 'gold3flip', frame: '' },
+            { key: 'gold2flip', frame: ''}
         ],
         frameRate: 5,
         repeat: -1
@@ -240,9 +245,22 @@ preload ()
   }
 
   update(time: number, delta: number) {
+    if(this.growSmoke) {
+      if(this.smoke.scaleX < 2) {
+        this.smoke.setScale(2);
+      }
+      if (this.smoke.scaleX <= 15 ) {
+        this.smoke.alpha = this.smoke.alpha - .01;
+        this.smoke.scaleX = this.smoke.scaleX * 1.01;
+        this.smoke.scaleY = this.smoke.scaleY * 1.01;
+      } else {
+        this.growSmoke = false;
+        this.smoke.setScale(.001);
+        this.smoke.setAlpha(1);
+      }
+    }
 
     if(this.walker.x > 618 && this.walker.y > 230 ) {
-        console.log('this.walker.x', this.walker.x, 'this.walker.y', this.walker.y);
         this.gameOver.text = 'Challenge Three Under Construction'
     }
     if(this.isInitial) {
@@ -323,8 +341,8 @@ preload ()
         //this.door.setY(this.door.y - 50);
         var sceneThis = this;
         setTimeout(function() {
-            console.log('in timeout ******');
             sceneThis.genie.y = sceneThis.genie.y + 800;
+            sceneThis.growSmoke = true;
         }, 1500);
         setTimeout(function() {
             sceneThis.genieText.text = 'Congrats on your second access approval.';
@@ -335,6 +353,11 @@ preload ()
             sceneThis.doorInterior2.y = sceneThis.doorInterior2.y + 800;
             sceneThis.sound.play('doorAudio');
         }, 7000);
+        setTimeout(function() {
+            sceneThis.genie.y = sceneThis.genie.y + 800;
+            sceneThis.growSmoke = true;
+        }, 8000);
+
     }
   }
 }
