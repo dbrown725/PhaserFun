@@ -81,6 +81,12 @@ class DesertScene extends Phaser.Scene {
     this.load.image('btnRight', 'assets/sprites/button_right_grey.png');
     this.load.atlas('walker', 'assets/sprites/leftRightWalk.png', 'assets/sprites/leftRightWalk.json');
     this.load.image('license', 'assets/sprites/license.png');
+    this.load.image('gold1', 'assets/sprites/gold_1.png');
+    this.load.image('gold2', 'assets/sprites/gold_2.png');
+    this.load.image('gold3', 'assets/sprites/gold_3.png');
+    this.load.image('gold4', 'assets/sprites/gold_4.png');
+    this.load.image('gold3flip', 'assets/sprites/gold_3_flip.png');
+    this.load.image('gold2flip', 'assets/sprites/gold_2_flip.png');
     this.load.atlasXML('jumperSprites', 'assets/sprites/spritesheet_jumper.png', 'assets/sprites/spritesheet_jumper.xml');
 
     //audios
@@ -208,13 +214,20 @@ class DesertScene extends Phaser.Scene {
       this.rightButton.y = this.rightButton.y - 800;
     }
 
-    //Coins
     this.anims.create({
-      key: 'coinsSpin',
-      frames: this.anims.generateFrameNames('jumperSprites', { prefix: 'gold_', suffix: '.png', start: 1, end: 4, zeroPad: 1 }),
-      frameRate: 2,
-      repeat: -1
+        key: 'coinsSpin',
+        frames: [
+            { key: 'gold1' },
+            { key: 'gold2' },
+            { key: 'gold3' },
+            { key: 'gold4' },
+            { key: 'gold3flip' },
+            { key: 'gold2flip'}
+        ],
+        frameRate: 5,
+        repeat: -1
     });
+
     var coinLocation = [[5, .2]];
     coinLocation.push([4.5, .3], [5.5, .3]);
     coinLocation.push([4, .4], [5, .4], [6, .4]);
