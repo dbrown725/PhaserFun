@@ -87,12 +87,12 @@ preload ()
     this.approvalsScore = this.add.text(170, 15, '1/5', style);
 
     this.genieText = this.add.text(250, 10, '', style);
-    this.genieText2 = this.add.text(300, 30, '', style);
+    this.genieText2 = this.add.text(150, 50, '', style);
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
 
-    this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.35, 'walker', 'player_09.png');
+    this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.15, 'walker', 'player_09.png');
     this.walker.setScale(0.30, 0.30);
     this.walker.setBounce(0.2);
     this.walker.setCollideWorldBounds(true);
@@ -120,17 +120,18 @@ preload ()
     });
     this.walkerDirection = 'right';
 
-    // this.brick = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (1 * 50), this.sys.canvas.height * .7, 'sokoban', 'ground_01.png');
-    // this.brick.setScale(1).refreshBody();
-    // this.brick.setCollideWorldBounds(true);
-    // this.physics.add.collider(this.walker, this.brick);
+    this.doorInterior2 = this.physics.add.staticSprite(this.sys.canvas.width, this.sys.canvas.height * .65, 'doorInterior');
+    this.doorInterior2.setScale(1.35).refreshBody();
+    this.doorInterior2.y = this.doorInterior2.y - 800;
 
     //Coins
-    var brickLocation = [[4, 2.65], [5, 2.65], [6, 2.65], [7, 2.65],
-        [8, 2.65], [9, 2.65], [10, 2.65], [11, 2.65], [12, 2.65], [13, 2.65]];
-    brickLocation.push([15, 5], [16, 5], [17, 5], [18, 5],  [19, 5], [20, 5], [21, 5]);
-    brickLocation.push([4, 7], [5, 7], [6, 7], [7, 7],
-        [8, 7], [9, 7], [10, 7], [11, 7], [12, 7]);
+    var brickLocation = [[.001, 2.2], [1, 2.2], [2, 2.2], [3, 2.2],[4, 2.2], [5, 2.2], [6, 2.2], [7, 2.2],
+        [8, 2.2], [9, 2.2], [10, 2.2], [11, 2.2], [12, 2.2], [13, 2.2], [14, 2.2], [15, 2.2], [16, 2.2], [17, 2.2], [18, 2.2],
+        [19, 2.2], [20, 2.2]];
+    brickLocation.push([15, 4.6], [16, 4.6], [17, 4.6], [18, 4.6], [19, 4.6], [20, 4.6], [21, 4.6]);
+    brickLocation.push([.01, 7], [1, 7], [2, 7], [3, 7],
+        [4, 7], [5, 7], [6, 7], [7, 7], [8, 7], [9, 7], [10, 7], [11, 7], [12, 7], [13, 7], [14, 7],
+        [15, 7], [16, 7], [17, 7]);
 
     this.bricks = [];
     brickLocation.forEach(function(value) {
@@ -141,24 +142,17 @@ preload ()
     }, this);
     this.physics.add.collider(this.walker, this.bricks);
 
-    this.genie = this.add.sprite(this.sys.canvas.width * .90, this.sys.canvas.height * .09, 'genie');
+    this.genie = this.add.sprite(this.sys.canvas.width * .90, this.sys.canvas.height * .125, 'genie');
     this.genie.setName('genie');
     this.genie.setOrigin(0, 0);
     this.genie.setScale(.2, .2);
     this.genie.y = this.genie.y - 800; //hide off screen for now
 
-    this.smoke = this.add.sprite(this.sys.canvas.width * .95, this.sys.canvas.height * .24, 'smoke');
+    this.smoke = this.add.sprite(this.sys.canvas.width * .95, this.sys.canvas.height * .275, 'smoke');
     this.smoke.setScale(.001);
 
-    this.doorInterior = this.physics.add.staticSprite(5, this.sys.canvas.height * .3, 'doorInterior');
+    this.doorInterior = this.physics.add.staticSprite(5, this.sys.canvas.height * .05, 'doorInterior');
     this.doorInterior.setScale(1.35).refreshBody();
-
-    this.doorInteriorBlack = this.physics.add.staticSprite(5, this.sys.canvas.height * .15, 'doorInteriorBlack');
-    this.doorInteriorBlack.setScale(1.35).refreshBody();
-
-    this.doorInterior2 = this.physics.add.staticSprite(this.sys.canvas.width - 10, this.sys.canvas.height * .7, 'doorInterior');
-    this.doorInterior2.setScale(1.35).refreshBody();
-    this.doorInterior2.y = this.doorInterior2.y - 800;
 
     var gameOverStyle = { font: '35px Roboto', fill: 'red' };
     this.gameOver = this.add.text(this.sys.canvas.width * .05, this.sys.canvas.height * .35, '', gameOverStyle);
@@ -225,11 +219,12 @@ preload ()
         frameRate: 5,
         repeat: -1
     });
-    var coinLocation = [[1.5, .4], [2.5, .4]];
-    coinLocation.push([1, .5], [2, .5], [3, .5]);
-    coinLocation.push([.5, .6], [1.5, .6], [2.5, .6], [3.5, .6]);
-    coinLocation.push([.5, .2], [1.5, .2], [2.5, .2], [3.5, .2], [4.5, .2]);
-    coinLocation.push([6.7, .37], [7.35, .31], [8, .27], [8.75, .27], [9.5, .27]);
+    var coinLocation = [];
+    coinLocation.push([-.5, .48], [.5, .48], [1.5, .48], [2.5, .48]);
+    coinLocation.push([-1, .58], [.001, .58], [1, .58], [2, .58], [3, .58]);
+    coinLocation.push([-1.5, .68], [-.5, .68], [.5, .68], [1.5, .68], [2.5, .68], [3.5, .68]);
+    coinLocation.push([-.5, .2], [.5, .2], [1.5, .2], [2.5, .2], [3.5, .2], [4.5, .2], [5.5, .2], [6.5, .2], [7.5, .2]);
+    coinLocation.push([6.7, .43], [7.7, .43], [8.7, .43], [9.7, .43]);
     this.coins = [];
     var min=1;
     var max=1000;
@@ -260,7 +255,7 @@ preload ()
       }
     }
 
-    if(this.walker.x > 618 && this.walker.y > 230 ) {
+    if(this.walker.x > 618 && this.walker.y > 210 ) {
         this.gameOver.text = 'Challenge Three Under Construction'
     }
     if(this.isInitial) {
@@ -326,7 +321,10 @@ preload ()
   }
 
   setCoinSpin(coin) {
-    coin.anims.play('coinsSpin', true);
+    //hack for timing issue
+    if(coin && coin.anims) {
+      coin.anims.play('coinsSpin', true);
+    }
   }
 
   coinCollision(walker, coin) {
@@ -337,7 +335,7 @@ preload ()
     if(this.score >= 21) {
         this.doorInterior.y = this.doorInterior.y - 800;
     }
-    if(this.score >= 40) { //40
+    if(this.score >= 49) { //40
         //this.door.setY(this.door.y - 50);
         var sceneThis = this;
         setTimeout(function() {
@@ -349,15 +347,17 @@ preload ()
             sceneThis.approvalsScore.text = '2/5';
         }, 3000);
         setTimeout(function() {
-            sceneThis.genieText.text = 'Genie says: Always lock your computer screen.';
-            sceneThis.doorInterior2.y = sceneThis.doorInterior2.y + 800;
-            sceneThis.sound.play('doorAudio');
+            sceneThis.genieText.text = '';
+            sceneThis.genieText2.text = 'Genie says: Always lock your computer screen.';
         }, 7000);
         setTimeout(function() {
             sceneThis.genie.y = sceneThis.genie.y + 800;
             sceneThis.growSmoke = true;
         }, 8000);
-
+        setTimeout(function() {
+            sceneThis.sound.play('doorAudio');
+            sceneThis.doorInterior2.y = sceneThis.doorInterior2.y + 800;
+        }, 10000);
     }
   }
 }
