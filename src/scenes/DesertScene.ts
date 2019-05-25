@@ -79,9 +79,9 @@ class DesertScene extends Phaser.Scene {
     this.load.image('blocker', '/assets/sprites/blocker.png');
     this.load.image('ground', 'assets/sprites/platformTransparent.png');
     this.load.image('coin', 'assets/sprites/coin.png');
-    this.load.image('btnJump', 'assets/sprites/button_jump.png');
-    this.load.image('btnLeft', 'assets/sprites/button_left_grey.png');
-    this.load.image('btnRight', 'assets/sprites/button_right_grey.png');
+    this.load.image('btnJump', 'assets/sprites/upButton.png');
+    this.load.image('btnLeft', 'assets/sprites/leftButton.png');
+    this.load.image('btnRight', 'assets/sprites/rightButton.png');
     this.load.atlas('walker', 'assets/sprites/leftRightWalk.png', 'assets/sprites/leftRightWalk.json');
     this.load.image('license', 'assets/sprites/license.png');
     this.load.image('gold1', 'assets/sprites/gold_1.png');
@@ -105,13 +105,13 @@ class DesertScene extends Phaser.Scene {
   create() {
     this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'desertBG');
 
-    this.tomb = this.add.sprite(this.sys.canvas.width * .825, this.sys.canvas.height * -.083, 'tomb');
+    this.tomb = this.add.sprite(this.sys.canvas.width * .825, this.sys.canvas.height * -.088, 'tomb');
     this.tomb.setName('tomb');
     this.tomb.setOrigin(0, 0);
     this.tomb.setScale(1.25, 1.25);
     this.tomb.setInteractive(true, function() { });
 
-    this.genie = this.add.sprite(this.sys.canvas.width * .75, this.sys.canvas.height * .25, 'genie');
+    this.genie = this.add.sprite(this.sys.canvas.width * .75, this.sys.canvas.height * .235, 'genie');
     this.genie.setName('genie');
     this.genie.setOrigin(0, 0);
     this.genie.setScale(.3, .3);
@@ -126,16 +126,16 @@ class DesertScene extends Phaser.Scene {
     this.license.setScale(.25, .25);
     this.license.y = this.license.y - 800; //hide off screen for now
 
-    this.blocker = this.physics.add.staticSprite(this.sys.canvas.width * .999, this.sys.canvas.height * .695, 'blocker');
+    this.blocker = this.physics.add.staticSprite(this.sys.canvas.width * .999, this.sys.canvas.height * .690, 'blocker');
     this.blocker.setScale(1.35).refreshBody();
     this.blocker.setInteractive(true, function() { });
 
-    this.door = this.physics.add.staticSprite(this.sys.canvas.width * .985, this.sys.canvas.height * .703, 'door');
+    this.door = this.physics.add.staticSprite(this.sys.canvas.width * .985, this.sys.canvas.height * .698, 'door');
     this.door.setScale(1.35).refreshBody();
     this.door.setInteractive(true, function() { });
 
     this.platforms = this.physics.add.staticGroup();
-    this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
+    this.platforms.create(0, this.sys.canvas.height - 40, 'ground').setScale(6, 2).refreshBody();
 
     this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.1, 'walker', 'player_09.png');
     this.walker.setScale(0.30, 0.30);
@@ -175,8 +175,8 @@ class DesertScene extends Phaser.Scene {
 
     //If not mobile don't show buttons
     if (this.isMobile == true) {
-      this.jumpButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.1, this.sys.canvas.height * 0.92, 'btnJump');
-      this.jumpButton.setScale(1).refreshBody();
+      this.jumpButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.1, this.sys.canvas.height * 0.88, 'btnJump');
+      this.jumpButton.setScale(.9).refreshBody();
       this.jumpButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.jump = true;
       }, this);
@@ -190,8 +190,8 @@ class DesertScene extends Phaser.Scene {
         this.jump = false;
       }, this);
 
-      this.leftButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.7, this.sys.canvas.height * 0.92, 'btnLeft');
-      this.leftButton.setScale(1).refreshBody();
+      this.leftButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.75, this.sys.canvas.height * 0.88, 'btnLeft');
+      this.leftButton.setScale(.9).refreshBody();
       this.leftButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveLeft = true;
         this.moveRight = false;
@@ -203,8 +203,8 @@ class DesertScene extends Phaser.Scene {
         this.moveLeft = false;
       }, this);
 
-      this.rightButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.9, this.sys.canvas.height * 0.92, 'btnRight');
-      this.rightButton.setScale(1).refreshBody();
+      this.rightButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.9, this.sys.canvas.height * 0.88, 'btnRight');
+      this.rightButton.setScale(.9).refreshBody();
       this.rightButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveRight = true;
         this.moveLeft = false;
@@ -312,7 +312,7 @@ class DesertScene extends Phaser.Scene {
       }
     }
 
-    if(this.walker.x > 618 && this.walker.y > 230) {
+    if(this.walker.x > 618 && this.walker.y > 227) {
         this.scene.start('PyramidScene', {score: this.score});
     }
 

@@ -162,9 +162,10 @@ preload ()
     this.cursors = this.input.keyboard.createCursorKeys();
 
     //If not mobile don't show buttons
+    //If not mobile don't show buttons
     if (this.isMobile == true) {
-      this.jumpButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.1, this.sys.canvas.height * 0.92, 'btnJump');
-      this.jumpButton.setScale(1).refreshBody();
+      this.jumpButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.1, this.sys.canvas.height * 0.88, 'btnJump');
+      this.jumpButton.setScale(.9).refreshBody();
       this.jumpButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.jump = true;
       }, this);
@@ -178,8 +179,8 @@ preload ()
         this.jump = false;
       }, this);
 
-      this.leftButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.7, this.sys.canvas.height * 0.92, 'btnLeft');
-      this.leftButton.setScale(1).refreshBody();
+      this.leftButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.75, this.sys.canvas.height * 0.88, 'btnLeft');
+      this.leftButton.setScale(.9).refreshBody();
       this.leftButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveLeft = true;
         this.moveRight = false;
@@ -191,8 +192,8 @@ preload ()
         this.moveLeft = false;
       }, this);
 
-      this.rightButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.9, this.sys.canvas.height * 0.92, 'btnRight');
-      this.rightButton.setScale(1).refreshBody();
+      this.rightButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.9, this.sys.canvas.height * 0.88, 'btnRight');
+      this.rightButton.setScale(.9).refreshBody();
       this.rightButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
         this.moveRight = true;
         this.moveLeft = false;
