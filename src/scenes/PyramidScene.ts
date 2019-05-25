@@ -340,6 +340,7 @@ preload ()
         var sceneThis = this;
         setTimeout(function() {
             sceneThis.genie.y = sceneThis.genie.y + 800;
+            sceneThis.sound.play('smokeAudio');
             sceneThis.growSmoke = true;
         }, 1500);
         setTimeout(function() {
@@ -352,6 +353,7 @@ preload ()
         }, 7000);
         setTimeout(function() {
             sceneThis.genie.y = sceneThis.genie.y + 800;
+            sceneThis.sound.play('smokeAudio');
             sceneThis.growSmoke = true;
         }, 8000);
         setTimeout(function() {

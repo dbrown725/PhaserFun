@@ -99,6 +99,7 @@ class DesertScene extends Phaser.Scene {
     this.load.audio('coinAudio', ['assets/audio/mb_coin.mp3', 'assets/audio/mb_coin.ogg']);
     this.load.audio('jumpAudio', ['assets/audio/smb_jump-small.mp3', 'assets/audio/smb_jump-small.ogg']);
     this.load.audio('doorAudio', ['assets/audio/door.mp3', 'assets/audio/door.ogg']);
+    this.load.audio('smokeAudio', ['assets/audio/smoke-bomb.mp3', 'assets/audio/smoke-bomb.ogg']);
   }
 
   create() {
@@ -395,6 +396,7 @@ class DesertScene extends Phaser.Scene {
 
   showGenieCongrats() {
       this.genie.y = this.genie.y + 800;
+      this.sound.play('smokeAudio');
       this.growSmoke = true;
       this.genieSpeak.text = 'Congrats! You have completed your first challenge.';
       this.genieSpeak2.text = 'Here is your first authorization approval.';
@@ -405,6 +407,7 @@ class DesertScene extends Phaser.Scene {
 
   startDoorOpen() {
       this.genie.y = this.genie.y - 800;
+      this.sound.play('smokeAudio');
       this.growSmoke = true;
       this.openDoor = true;
       this.blocker.destroy();
@@ -484,6 +487,7 @@ class DesertScene extends Phaser.Scene {
       this.growSmoke = true;
       this.walkerSpeak.text = '';
       this.genie.y = this.genie.y + 800;
+      this.sound.play('smokeAudio');
       var genieStyle = { font: '40px Roboto', fill: 'grey' };
       this.genieSpeak = this.add.text(this.genie.x - 180, this.genie.y - 40, 'Welcome!', genieStyle);
       this.time.delayedCall(750, function(){
@@ -620,6 +624,7 @@ class DesertScene extends Phaser.Scene {
       this.genieSpeak.text = '';
       this.genieSpeak2.text = '';
       this.genie.y = this.genie.y - 800;
+      this.sound.play('smokeAudio');
       this.growSmoke = true;
   }
 
