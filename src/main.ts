@@ -1,6 +1,6 @@
 import 'phaser';
 
-//import WelcomeScene from './scenes/WelcomeScene';
+import WelcomeScene from './scenes/WelcomeScene';
 import DesertScene from './scenes/DesertScene';
 import PyramidScene from './scenes/PyramidScene';
 
@@ -22,7 +22,7 @@ const config:GameConfig = {
         }
     },
     scene: [
-      DesertScene, PyramidScene //WelcomeScene,
+      WelcomeScene, DesertScene, PyramidScene
     ]
 };
 
