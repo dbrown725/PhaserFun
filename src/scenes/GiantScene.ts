@@ -1,6 +1,13 @@
-class PyramidScene extends Phaser.Scene {
+class GiantScene extends Phaser.Scene {
+  background: Phaser.GameObjects.Sprite;
+  tomb: Phaser.GameObjects.Sprite;
+  door: Phaser.Physics.Arcade.Sprite;
+  blocker: Phaser.Physics.Arcade.Sprite;
   walker: Phaser.Physics.Arcade.Sprite;
   genie: Phaser.GameObjects.Sprite;
+  coin: Phaser.Physics.Arcade.Sprite;
+  smoke: Phaser.GameObjects.Sprite;
+
   ground: Phaser.Physics.Arcade.Image;
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
@@ -10,15 +17,11 @@ class PyramidScene extends Phaser.Scene {
   rightButton: Phaser.Physics.Arcade.Sprite;
   approvalsLabel: Phaser.GameObjects.Text;
   approvalsScore: Phaser.GameObjects.Text;
-  genieText: Phaser.GameObjects.Text;
-  genieText2: Phaser.GameObjects.Text;
-  gameOver: Phaser.GameObjects.Text;
-  bricks: Phaser.Physics.Arcade.Image[];
-  doorInterior: Phaser.Physics.Arcade.Sprite;
-  doorInteriorBlack: Phaser.Physics.Arcade.Sprite;
-  doorInterior2: Phaser.Physics.Arcade.Sprite;
-  doorInteriorBlack2: Phaser.Physics.Arcade.Sprite;
-  smoke: Phaser.GameObjects.Sprite;
+  walkerSpeak: Phaser.GameObjects.Text;
+  genieSpeak:  Phaser.GameObjects.Text;
+  genieSpeak2:  Phaser.GameObjects.Text;
+  underConstruction:  Phaser.GameObjects.Text;
+  giantUnderConstruction:  Phaser.GameObjects.Text;
 
   cursors: any;
   walkerDirection: string;
@@ -31,25 +34,22 @@ class PyramidScene extends Phaser.Scene {
   isMobile: boolean;
   score: integer;
   openDoor: boolean;
-  isInitial: boolean;
-  initialCount: integer;
-  growSmoke = true;
+  growSmoke: boolean
+
 
   constructor() {
     super({
-      key: 'PyramidScene'
+      key: 'GiantScene'
     });
   }
 
-  init(data) {
+  init() {
       this.isPlayerMidJump = false;
       this.isPlayerMoving = false;
       this.isFirstLoop = true;
       this.isMobile = false;
       this.score = 0;
       this.openDoor = false;
-      this.isInitial = true;
-      this.initialCount = 0;
       this.growSmoke = false;
 
       //Allows for default pointer plus one. Needed so the jump button
@@ -71,28 +71,43 @@ class PyramidScene extends Phaser.Scene {
       }
   }
 
-preload ()
-    {
-        this.load.atlasXML('sokoban', 'assets/sprites/sokoban_spritesheet.png', 'assets/sprites/sokoban_spritesheet.xml');
-        this.load.atlasXML('round', 'assets/sprites/round.png', 'assets/sprites/round.xml');
-        this.load.image('doorInterior', '/assets/sprites/door_interior.png');
-        this.load.image('doorInteriorBlack', '/assets/sprites/door_interior_black.png');
-    }
-
+  preload() {
+  }
 
   create() {
+    this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'desertBG');
+
+    this.tomb = this.add.sprite(this.sys.canvas.width * .825, this.sys.canvas.height * -.088, 'tomb');
+    this.tomb.setName('tomb');
+    this.tomb.setOrigin(0, 0);
+    this.tomb.setScale(1.25, 1.25);
+    this.tomb.setInteractive(true, function() { });
+
+    this.genie = this.add.sprite(this.sys.canvas.width * .75, this.sys.canvas.height * .235, 'genie');
+    this.genie.setName('genie');
+    this.genie.setOrigin(0, 0);
+    this.genie.setScale(.3, .3);
+    this.genie.y = this.genie.y - 800; //hide off screen for now
+
+    this.smoke = this.add.sprite(this.sys.canvas.width * .80, this.sys.canvas.height * .5, 'smoke');
+    this.smoke.setScale(.001);
+
+    this.blocker = this.physics.add.staticSprite(this.sys.canvas.width * .999, this.sys.canvas.height * .690, 'blocker');
+    this.blocker.setScale(1.35).refreshBody();
+    this.blocker.setInteractive(true, function() { });
+
+    this.door = this.physics.add.staticSprite(this.sys.canvas.width * .985, this.sys.canvas.height * .698, 'door');
+    this.door.setScale(1.35).refreshBody();
+    this.door.setInteractive(true, function() { });
+
+    this.platforms = this.physics.add.staticGroup();
+    this.platforms.create(0, this.sys.canvas.height - 40, 'ground').setScale(6, 2).refreshBody();
 
     var style = { font: '20px Roboto', fill: 'grey' };
     this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
-    this.approvalsScore = this.add.text(170, 15, '1/3', style);
+    this.approvalsScore = this.add.text(170, 15, '2/3', style);
 
-    this.genieText = this.add.text(250, 10, '', style);
-    this.genieText2 = this.add.text(150, 50, '', style);
-
-    this.platforms = this.physics.add.staticGroup();
-    this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
-
-    this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.15, 'walker', 'player_09.png');
+    this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.1, 'walker', 'player_09.png');
     this.walker.setScale(0.30, 0.30);
     this.walker.setBounce(0.2);
     this.walker.setCollideWorldBounds(true);
@@ -120,48 +135,14 @@ preload ()
     });
     this.walkerDirection = 'right';
 
-    this.doorInterior2 = this.physics.add.staticSprite(this.sys.canvas.width, this.sys.canvas.height * .65, 'doorInterior');
-    this.doorInterior2.setScale(1.35).refreshBody();
-    this.doorInterior2.y = this.doorInterior2.y - 800;
-
-    //Coins
-    var brickLocation = [[.001, 2.2], [1, 2.2], [2, 2.2], [3, 2.2],[4, 2.2], [5, 2.2], [6, 2.2], [7, 2.2],
-        [8, 2.2], [9, 2.2], [10, 2.2], [11, 2.2], [12, 2.2], [13, 2.2], [14, 2.2], [15, 2.2], [16, 2.2], [17, 2.2], [18, 2.2],
-        [19, 2.2], [20, 2.2]];
-    brickLocation.push([15, 4.6], [16, 4.6], [17, 4.6], [18, 4.6], [19, 4.6], [20, 4.6], [21, 4.6]);
-    brickLocation.push([.01, 7], [1, 7], [2, 7], [3, 7],
-        [4, 7], [5, 7], [6, 7], [7, 7], [8, 7], [9, 7], [10, 7], [11, 7], [12, 7], [13, 7], [14, 7],
-        [15, 7], [16, 7], [17, 7]);
-
-    this.bricks = [];
-    brickLocation.forEach(function(value) {
-      var newBrick = this.physics.add.staticSprite((value[0] * 32), this.sys.canvas.height - (value[1] * 32), 'sokoban', 'block_07.png');
-      newBrick.setScale(.5).refreshBody();
-      newBrick.setCollideWorldBounds(true);
-      this.bricks.push(newBrick);
-    }, this);
-    this.physics.add.collider(this.walker, this.bricks);
-
-    this.genie = this.add.sprite(this.sys.canvas.width * .90, this.sys.canvas.height * .125, 'genie');
-    this.genie.setName('genie');
-    this.genie.setOrigin(0, 0);
-    this.genie.setScale(.2, .2);
-    this.genie.y = this.genie.y - 800; //hide off screen for now
-
-    this.smoke = this.add.sprite(this.sys.canvas.width * .95, this.sys.canvas.height * .275, 'smoke');
-    this.smoke.setScale(.001);
-
-    this.doorInterior = this.physics.add.staticSprite(5, this.sys.canvas.height * .05, 'doorInterior');
-    this.doorInterior.setScale(1.35).refreshBody();
-
-    var gameOverStyle = { font: '35px Roboto', fill: 'red' };
-    this.gameOver = this.add.text(this.sys.canvas.width * .05, this.sys.canvas.height * .35, '', gameOverStyle);
+    var walkerStyle = { font: '20px Roboto', fill: 'grey' };
+    this.walkerSpeak = this.add.text(this.walker.x + 20, this.walker.y - 40, '', walkerStyle);
 
     this.physics.add.collider(this.walker, this.platforms);
+    this.physics.add.collider(this.walker, this.blocker);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    //If not mobile don't show buttons
     //If not mobile don't show buttons
     if (this.isMobile == true) {
       this.jumpButton = this.physics.add.staticSprite(this.sys.canvas.width * 0.1, this.sys.canvas.height * 0.88, 'btnJump');
@@ -204,9 +185,9 @@ preload ()
       this.rightButton.setInteractive().on('pointerout', function(pointer, localX, localY, event) {
         this.moveRight = false;
       }, this);
+
     }
 
-    //Coins
     this.anims.create({
         key: 'coinsSpin',
         frames: [
@@ -220,12 +201,13 @@ preload ()
         frameRate: 5,
         repeat: -1
     });
-    var coinLocation = [];
-    coinLocation.push([-.5, .48], [.5, .48], [1.5, .48], [2.5, .48]);
-    coinLocation.push([-1, .58], [.001, .58], [1, .58], [2, .58], [3, .58]);
-    coinLocation.push([-1.5, .68], [-.5, .68], [.5, .68], [1.5, .68], [2.5, .68], [3.5, .68]);
-    coinLocation.push([-.5, .2], [.5, .2], [1.5, .2], [2.5, .2], [3.5, .2], [4.5, .2], [5.5, .2], [6.5, .2], [7.5, .2]);
-    coinLocation.push([6.7, .43], [7.7, .43], [8.7, .43], [9.7, .43]);
+
+    var coinLocation = [[5, .2]];
+    coinLocation.push([4.5, .3], [5.5, .3]);
+    coinLocation.push([4, .4], [5, .4], [6, .4]);
+    coinLocation.push([3.5, .5], [4.5, .5], [5.5, .5], [6.5, .5]);
+    coinLocation.push([3, .6], [4, .6], [5, .6], [6, .6], [7, .6]);
+    coinLocation.push([2.5, .7], [3.5, .7], [4.5, .7], [5.5, .7], [6.5, .7], [7.5, .7]);
     this.coins = [];
     var min=1;
     var max=1000;
@@ -233,17 +215,21 @@ preload ()
       var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'jumperSprites', 'gold_1.png');
       newCoin.setScale(.3).refreshBody();
       newCoin.setCollideWorldBounds(true);
+      //newCoin.y = newCoin.y - 800;
       this.time.delayedCall(Math.random() * (+max - +min) + +min, this.setCoinSpin, [newCoin], this);
       this.coins.push(newCoin);
     }, this);
+
+    var giantStyle = { font: '30px Roboto', fill: 'red' };
+    this.giantUnderConstruction = this.add.text(150, 20, 'Giant Scene under construction', giantStyle);
+
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
-    this.sound.play('newPlayerAudio');
   }
 
   update(time: number, delta: number) {
     if(this.growSmoke) {
-      if(this.smoke.scaleX < 2) {
-        this.smoke.setScale(2);
+      if(this.smoke.scaleX < 4) {
+        this.smoke.setScale(4);
       }
       if (this.smoke.scaleX <= 15 ) {
         this.smoke.alpha = this.smoke.alpha - .01;
@@ -256,25 +242,14 @@ preload ()
       }
     }
 
-    if(this.walker.x > 618 && this.walker.y > 210 ) {
-        console.log('Pyramid this.scene.start(Advertisement2Scene, {});');
-        this.scene.start('Advertisement2Scene', {});
-        //this.gameOver.text = 'Challenge Three Under Construction'
-    }
-    if(this.isInitial) {
-        this.initialCount = this.initialCount + 1;
-        this.walker.x = this.walker.x + .5;
-        if(this.initialCount > 80) {
-            this.isInitial = false;
-        }
-    }
-
-    if (this.isFirstLoop == true) {
-
-      if (this.isMobile == true) {
-        //this.walker
-      }
-      this.isFirstLoop = false;
+    if(this.walker.x > 618 && this.walker.y > 227) {
+        var underConstructionStyle = { font: '30px Roboto', fill: 'red' };
+        this.underConstruction = this.add.text(150, 60, 'Candy Heaven still under construction.', underConstructionStyle);
+        //hide the buttons
+        // this.jumpButton.y = this.jumpButton.y - 800;
+        // this.leftButton.y = this.leftButton.y - 800;
+        // this.rightButton.y = this.rightButton.y - 800;
+        //this.scene.start('Advertisement1Scene', {});
     }
     if ((this.cursors.left.isDown || this.moveLeft)
       && (this.walker.body.blocked.down || this.walker.body.touching.down)) // if the left arrow key is down or touch left button
@@ -321,48 +296,76 @@ preload ()
         this.walker.setVelocityX(-150);
       }
     }
+
+    //open door slowly
+    if(this.openDoor && this.door.y > 155) {
+        this.door.setY(this.door.y - .5);
+    }
   }
 
   setCoinSpin(coin) {
-    //hack for timing issue
-    if(coin && coin.anims) {
-      coin.anims.play('coinsSpin', true);
-    }
+    coin.anims.play('coinsSpin', true);
   }
 
   coinCollision(walker, coin) {
     this.sound.play('coinAudio');
     coin.destroy();
     this.score = this.score + 1;
+    //this.approvalsScore.text = this.score.toString();
     if(this.score >= 21) {
-        this.doorInterior.y = this.doorInterior.y - 800;
+        //this.door.setY(this.door.y - 50);
+        var timer2 = 0;
+        this.time.delayedCall(timer2 += 2000, this.showGenieCongrats, null, this);
+        //this.time.delayedCall(timer2 += 4000, this.genieSecurityTip, null, this);
+        //this.time.delayedCall(timer2 += 6000, this.genieGoodLuck, null, this);
+        this.time.delayedCall(timer2 += 6000, this.startDoorOpen, null, this);
     }
-    if(this.score >= 28) {
-        var sceneThis = this;
-        setTimeout(function() {
-            sceneThis.genie.y = sceneThis.genie.y + 800;
-            sceneThis.sound.play('smokeAudio');
-            sceneThis.growSmoke = true;
-        }, 1500);
-        setTimeout(function() {
-            sceneThis.genieText.text = 'Congrats on your second access approval.';
-            sceneThis.approvalsScore.text = '2/3';
-        }, 3000);
-        setTimeout(function() {
-            sceneThis.genieText.text = '';
-            sceneThis.genieText2.text = 'Genie says: Always lock your computer screen.';
-        }, 7000);
-        setTimeout(function() {
-            sceneThis.genie.y = sceneThis.genie.y + 800;
-            sceneThis.sound.play('smokeAudio');
-            sceneThis.growSmoke = true;
-        }, 8000);
-        setTimeout(function() {
-            sceneThis.sound.play('doorAudio');
-            sceneThis.doorInterior2.y = sceneThis.doorInterior2.y + 800;
-        }, 10000);
-    }
+  }
+
+  showGenieCongrats() {
+      this.genie.y = this.genie.y + 800;
+      this.sound.play('smokeAudio');
+      this.growSmoke = true;
+      var genieStyle = { font: '20px Roboto', fill: 'grey' };
+      this.genieSpeak = this.add.text(this.genie.x - 440, this.genie.y + 20, '', genieStyle);
+      this.genieSpeak.text = 'Congrats! You have completed all three challenges.';
+      this.genieSpeak2 = this.add.text(this.genie.x - 410, this.genie.y + 60, '', genieStyle);
+      this.genieSpeak2.text = 'You have been granted access to candy heaven.';
+      this.time.delayedCall(2000, function(){
+          this.approvalsScore.text = '3/3';
+      }, null, this);
+  }
+
+  startDoorOpen() {
+      this.genie.y = this.genie.y - 800;
+      this.sound.play('smokeAudio');
+      this.growSmoke = true;
+      this.openDoor = true;
+      this.blocker.destroy();
+      this.sound.play('doorAudio');
+  }
+
+  genieSecurityTip() {
+      this.genieSpeak.y = this.genieSpeak.y + 60;
+      this.genieSpeak2.y = this.genieSpeak2.y + 60;
+      this.genieSpeak.text = 'The Genie says: Always secure your passwords.';
+      this.genieSpeak2.text = 'Never share your passwords with anyone!';
+  }
+
+  genieGoodLuck() {
+      this.genieSpeak.y = this.genieSpeak.y + 30;
+      this.genieSpeak2.y = this.genieSpeak2.y + 30;
+      this.genieSpeak.text = 'Good luck on your next challenge!';
+      this.genieSpeak2.text = '';
+  }
+
+  hideGenie() {
+      this.genieSpeak.text = '';
+      this.genieSpeak2.text = '';
+      this.genie.y = this.genie.y - 800;
+      this.sound.play('smokeAudio');
+      this.growSmoke = true;
   }
 }
 
-export default PyramidScene;
+export default GiantScene;

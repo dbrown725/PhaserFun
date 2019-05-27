@@ -3,7 +3,7 @@ class DesertScene extends Phaser.Scene {
   tomb: Phaser.GameObjects.Sprite;
   door: Phaser.Physics.Arcade.Sprite;
   blocker: Phaser.Physics.Arcade.Sprite;
-  walker: Phaser.Physics.Arcade.Sprite;
+  walkerDesert: Phaser.Physics.Arcade.Sprite;
   genie: Phaser.GameObjects.Sprite;
   license: Phaser.GameObjects.Sprite;
   coin: Phaser.Physics.Arcade.Sprite;
@@ -137,10 +137,10 @@ class DesertScene extends Phaser.Scene {
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 40, 'ground').setScale(6, 2).refreshBody();
 
-    this.walker = this.physics.add.sprite(10, this.sys.canvas.height * 0.1, 'walker', 'player_09.png');
-    this.walker.setScale(0.30, 0.30);
-    this.walker.setBounce(0.2);
-    this.walker.setCollideWorldBounds(true);
+    this.walkerDesert = this.physics.add.sprite(10, this.sys.canvas.height * 0.1, 'walker', 'player_09.png');
+    this.walkerDesert.setScale(0.30, 0.30);
+    this.walkerDesert.setBounce(0.2);
+    this.walkerDesert.setCollideWorldBounds(true);
     this.anims.create({
       key: 'walkLeft',
       frames: this.anims.generateFrameNames('walker', { prefix: 'player_', suffix: '.png', start: 12, end: 14, zeroPad: 2 }),
@@ -166,10 +166,10 @@ class DesertScene extends Phaser.Scene {
     this.walkerDirection = 'right';
 
     var walkerStyle = { font: '20px Roboto', fill: 'grey' };
-    this.walkerSpeak = this.add.text(this.walker.x + 20, this.walker.y - 40, '', walkerStyle);
+    this.walkerSpeak = this.add.text(this.walkerDesert.x + 20, this.walkerDesert.y - 40, '', walkerStyle);
 
-    this.physics.add.collider(this.walker, this.platforms);
-    this.physics.add.collider(this.walker, this.blocker);
+    this.physics.add.collider(this.walkerDesert, this.platforms);
+    this.physics.add.collider(this.walkerDesert, this.blocker);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -254,7 +254,7 @@ class DesertScene extends Phaser.Scene {
       this.coins.push(newCoin);
     }, this);
 
-    this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
+    this.physics.add.collider(this.walkerDesert, this.coins, this.coinCollision, null, this);
     console.log('navigator.userAgent', navigator.userAgent);
 
     //Scripted dialog
@@ -312,44 +312,45 @@ class DesertScene extends Phaser.Scene {
       }
     }
 
-    if(this.walker.x > 618 && this.walker.y > 227) {
-        this.scene.start('PyramidScene', {score: this.score});
+    if(this.walkerDesert.x > 618 && this.walkerDesert.y > 227) {
+      console.log('Desert this.scene.start(Advertisement1Scene, {});');
+        this.scene.start('Advertisement1Scene', {});
     }
 
     if (this.isFirstLoop == true) {
 
       if (this.isMobile == true) {
-        //this.walker
+        //this.walkerDesert
       }
       this.isFirstLoop = false;
     }
     if ((this.cursors.left.isDown || this.moveLeft)
-      && (this.walker.body.blocked.down || this.walker.body.touching.down)) // if the left arrow key is down or touch left button
+      && (this.walkerDesert.body.blocked.down || this.walkerDesert.body.touching.down)) // if the left arrow key is down or touch left button
     {
-      this.walker.setVelocityX(-150); // move left
-      this.walker.anims.play('walkLeft', true);
+      this.walkerDesert.setVelocityX(-150); // move left
+      this.walkerDesert.anims.play('walkLeft', true);
       this.walkerDirection = 'left';
       this.isPlayerMoving = true;
     }
     else if ((this.cursors.right.isDown || this.moveRight)
-      && (this.walker.body.blocked.down || this.walker.body.touching.down)) // if the right arrow key is down or touch right button
+      && (this.walkerDesert.body.blocked.down || this.walkerDesert.body.touching.down)) // if the right arrow key is down or touch right button
     {
-      this.walker.setVelocityX(150); // move right
-      this.walker.anims.play('walkRight', true); // play walk animation
+      this.walkerDesert.setVelocityX(150); // move right
+      this.walkerDesert.anims.play('walkRight', true); // play walk animation
       this.walkerDirection = 'right';
       this.isPlayerMoving = true;
-    } else if (this.walker.body.blocked.down || this.walker.body.touching.down) {
-      this.walker.setVelocityX(0);
+    } else if (this.walkerDesert.body.blocked.down || this.walkerDesert.body.touching.down) {
+      this.walkerDesert.setVelocityX(0);
       this.isPlayerMoving = false;
       if (this.walkerDirection == 'right') {
-        this.walker.anims.play('idleRight', true);
+        this.walkerDesert.anims.play('idleRight', true);
       } else {
-        this.walker.anims.play('idleLeft', true);
+        this.walkerDesert.anims.play('idleLeft', true);
       }
     }
     if ((this.cursors.space.isDown || this.cursors.up.isDown || this.jump)
-      && (this.walker.body.blocked.down || this.walker.body.touching.down)) {
-      this.walker.setVelocityY(-300); // jump up
+      && (this.walkerDesert.body.blocked.down || this.walkerDesert.body.touching.down)) {
+      this.walkerDesert.setVelocityY(-300); // jump up
       this.isPlayerMidJump = true;
       this.sound.play('jumpAudio');
       var sceneContext = this;
@@ -363,9 +364,9 @@ class DesertScene extends Phaser.Scene {
       && !this.cursors.up.isDown
     ) {
       if (this.walkerDirection == 'right') {
-        this.walker.setVelocityX(150);
+        this.walkerDesert.setVelocityX(150);
       } else {
-        this.walker.setVelocityX(-150);
+        this.walkerDesert.setVelocityX(-150);
       }
     }
 
@@ -401,7 +402,7 @@ class DesertScene extends Phaser.Scene {
       this.genieSpeak.text = 'Congrats! You have completed your first challenge.';
       this.genieSpeak2.text = 'Here is your first authorization approval.';
       this.time.delayedCall(2000, function(){
-          this.approvalsScore.text = '1/5';
+          this.approvalsScore.text = '1/3';
       }, null, this);
   }
 
@@ -429,39 +430,39 @@ class DesertScene extends Phaser.Scene {
   }
 
   jumpRight() {
-      this.walkerSpeak.x = this.walker.x + 20;
-      this.walkerSpeak.y = this.walker.y - 40;
+      this.walkerSpeak.x = this.walkerDesert.x + 20;
+      this.walkerSpeak.y = this.walkerDesert.y - 40;
       this.walkerSpeak.text = 'Candy!'
-      this.walker.setVelocityX(150); // move right
+      this.walkerDesert.setVelocityX(150); // move right
       this.sound.play('jumpAudio');
-      this.walker.anims.play('walkRight', true); // play walk animation
+      this.walkerDesert.anims.play('walkRight', true); // play walk animation
       this.walkerDirection = 'right';
       this.isPlayerMoving = true;
-      this.walker.setVelocityY(-150);
+      this.walkerDesert.setVelocityY(-150);
   }
 
   jumpLeft(final) {
       //var walkerStyle = { font: '20px Roboto', fill: 'red' };
-      this.walkerSpeak.x = this.walker.x + 20;
-      this.walkerSpeak.y = this.walker.y - 40;
-      this.walker.setVelocityX(-150); // move left
+      this.walkerSpeak.x = this.walkerDesert.x + 20;
+      this.walkerSpeak.y = this.walkerDesert.y - 40;
+      this.walkerDesert.setVelocityX(-150); // move left
       this.sound.play('jumpAudio');
-      this.walker.anims.play('walkLeft', true); // play walk animation
+      this.walkerDesert.anims.play('walkLeft', true); // play walk animation
       this.walkerDirection = 'left';
       this.isPlayerMoving = true;
       if(final) {
-           this.walker.setVelocityY(-100);
-            this.walker.setVelocityX(-100); // move left
+           this.walkerDesert.setVelocityY(-100);
+            this.walkerDesert.setVelocityX(-100); // move left
       } else {
-           this.walker.setVelocityY(-150);
-            this.walker.setVelocityX(-150); // move left
+           this.walkerDesert.setVelocityY(-150);
+            this.walkerDesert.setVelocityX(-150); // move left
       }
 
   }
 
   introRight(final) {
-      this.walkerSpeak.x = this.walker.x + 20;
-      this.walkerSpeak.y = this.walker.y - 60;
+      this.walkerSpeak.x = this.walkerDesert.x + 20;
+      this.walkerSpeak.y = this.walkerDesert.y - 60;
       this.walkerSpeak.text = '';
       if(final == true) {
           this.time.delayedCall(2000, function() {
@@ -476,8 +477,8 @@ class DesertScene extends Phaser.Scene {
       if(final == true) {
           this.walkerSpeak.text = 'No candy?!?!'
       }
-      // this.walker.setVelocityX(-100); // move right
-      // this.walker.anims.play('walkLeft', true); // play walk animation
+      // this.walkerDesert.setVelocityX(-100); // move right
+      // this.walkerDesert.anims.play('walkLeft', true); // play walk animation
       this.walkerDirection = 'left';
       // this.isPlayerMoving = true;
   }
@@ -492,7 +493,7 @@ class DesertScene extends Phaser.Scene {
       this.genieSpeak = this.add.text(this.genie.x - 180, this.genie.y - 40, 'Welcome!', genieStyle);
       this.time.delayedCall(750, function(){
           this.walkerSpeak.text = '';
-          this.walker.setVelocityY(-200);
+          this.walkerDesert.setVelocityY(-200);
           this.sound.play('jumpAudio');
       }, null, this);
 
@@ -632,7 +633,7 @@ class DesertScene extends Phaser.Scene {
       this.sound.play('newPlayerAudio');
       var style = { font: '20px Roboto', fill: 'grey' };
       this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
-      this.approvalsScore = this.add.text(170, 15, '0/5', style);
+      this.approvalsScore = this.add.text(170, 15, '0/3', style);
       this.coins.forEach(function(value) {
           value.y = value.y + 800;
       }, this);
