@@ -7,7 +7,7 @@ class Advertisement1Scene extends Phaser.Scene {
   countDownText:  Phaser.GameObjects.Text;
   secondsPassed: integer;
   continueKey: any;
-  isMobile: booelan;
+  isMobile: boolean;
 
   constructor() {
     super({
