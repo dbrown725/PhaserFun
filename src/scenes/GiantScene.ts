@@ -291,9 +291,7 @@ class GiantScene extends Phaser.Scene {
     var timeInSeconds = Math.floor( time / 1000);
     if(this.secondsPassed != timeInSeconds) {
       this.secondsPassed = timeInSeconds;
-      console.log('secondsPassed', this.secondsPassed);
-      if(this.secondsPassed % 10 == 0) {
-        console.log('shake!!!');
+      if(this.secondsPassed % 5 == 0) {
         this.cameras.main.shake(500, .005);
       }
     }

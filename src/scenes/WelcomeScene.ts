@@ -62,7 +62,6 @@ class WelcomeScene extends Phaser.Scene {
     this.background2.setScale(.785);
     this.smoke = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'smoke');
     this.smoke.setScale(2);
-    console.log('this.smoke.scale', this.smoke);
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();

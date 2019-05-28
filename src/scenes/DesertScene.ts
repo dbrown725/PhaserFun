@@ -307,7 +307,6 @@ class DesertScene extends Phaser.Scene {
     }
 
     if(this.walkerDesert.x > 618 && this.walkerDesert.y > 227) {
-      console.log('Desert this.scene.start(Advertisement1Scene, {});');
         this.scene.start('Advertisement1Scene', {});
     }
 

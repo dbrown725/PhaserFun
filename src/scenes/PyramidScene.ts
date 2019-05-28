@@ -257,9 +257,7 @@ preload ()
     }
 
     if(this.walker.x > 618 && this.walker.y > 210 ) {
-        console.log('Pyramid this.scene.start(Advertisement2Scene, {});');
         this.scene.start('Advertisement2Scene', {});
-        //this.gameOver.text = 'Challenge Three Under Construction'
     }
     if(this.isInitial) {
         this.initialCount = this.initialCount + 1;

@@ -82,7 +82,6 @@ class Advertisement1Scene extends Phaser.Scene {
       }
     }
     if(this.isContinue || this.continueKey.isDown) {
-      console.log('Ad 1 this.scene.start(PyramidScene, {});');
         this.scene.start('PyramidScene', {});
     }
   }
