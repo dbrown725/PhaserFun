@@ -21,6 +21,7 @@ class DesertScene extends Phaser.Scene {
   walkerSpeak: Phaser.GameObjects.Text;
   genieSpeak:  Phaser.GameObjects.Text;
   genieSpeak2:  Phaser.GameObjects.Text;
+  genieSpeak3:  Phaser.GameObjects.Text;
 
   cursors: any;
   walkerDirection: string;
@@ -165,7 +166,7 @@ class DesertScene extends Phaser.Scene {
     });
     this.walkerDirection = 'right';
 
-    var walkerStyle = { font: '20px Roboto', fill: 'grey' };
+    var walkerStyle = { font: '20px Roboto', fill: 'black' };
     this.walkerSpeak = this.add.text(this.walkerDesert.x + 20, this.walkerDesert.y - 40, '', walkerStyle);
 
     this.physics.add.collider(this.walkerDesert, this.platforms);
@@ -262,31 +263,24 @@ class DesertScene extends Phaser.Scene {
     this.time.delayedCall(timer += 1500, this.jumpRight, null, this);
     this.time.delayedCall(timer += 1000, this.jumpLeft, null, this);
     this.time.delayedCall(timer += 1000, this.jumpRight, null, this);
-    this.time.delayedCall(timer += 1000, this.jumpLeft, null, this);
-    this.time.delayedCall(timer += 1000, this.jumpRight, null, this);
     this.time.delayedCall(timer += 1000, this.jumpLeft, [true], this);
-    this.time.delayedCall(timer += 1000, this.introRight, null, this);
-    this.time.delayedCall(timer += 1000, this.introLeft, null, this);
-    this.time.delayedCall(timer += 1000, this.introRight, null, this);
-    this.time.delayedCall(timer += 1000, this.introLeft, [true], this);
     this.time.delayedCall(timer += 1000, this.introRight, [true], this);
-    this.time.delayedCall(timer += 5000, this.showGenie, null, this);
+    this.time.delayedCall(timer += 4500, this.showGenie, null, this);
     this.time.delayedCall(timer += 1000, this.whoAreYou, null, this);
     this.time.delayedCall(timer += 2000, this.genieIntro, null, this);
-    this.time.delayedCall(timer += 2500, this.whosaWhatsa, null, this);
-    this.time.delayedCall(timer += 2000, this.genieIntro2, null, this);
+    //this.time.delayedCall(timer += 2000, this.genieIntro2, null, this);
     this.time.delayedCall(timer += 2500, this.genieIntro3, null, this);
     this.time.delayedCall(timer += 3500, this.allTheCandy, null, this);
     this.time.delayedCall(timer += 3000, this.grantedAccess, null, this);
-    this.time.delayedCall(timer += 4000, this.howDoWeDoThat, null, this);
+    //this.time.delayedCall(timer += 4000, this.howDoWeDoThat, null, this);
     this.time.delayedCall(timer += 3000, this.authorAndAthen, null, this);
     this.time.delayedCall(timer += 5500, this.justCandy, null, this);
     this.time.delayedCall(timer += 3000, this.authenticated, null, this);
     this.time.delayedCall(timer += 3000, this.sureHereYouGo, null, this);
     this.time.delayedCall(timer += 2000, this.showLicense, null, this);
     this.time.delayedCall(timer += 2000, this.youAreAuthenticated, null, this);
-    this.time.delayedCall(timer += 3000, this.allEars, null, this);
-    this.time.delayedCall(timer += 3500, this.fiveChallenges, null, this);
+    //this.time.delayedCall(timer += 3000, this.allEars, null, this);
+    this.time.delayedCall(timer += 2000, this.threeChallenges, null, this);
     this.time.delayedCall(timer += 5500, this.passedChallenges, null, this);
     this.time.delayedCall(timer += 4000, this.aLotOfWork, null, this);
     this.time.delayedCall(timer += 3500, this.importantWork, null, this);
@@ -442,7 +436,6 @@ class DesertScene extends Phaser.Scene {
   }
 
   jumpLeft(final) {
-      //var walkerStyle = { font: '20px Roboto', fill: 'red' };
       this.walkerSpeak.x = this.walkerDesert.x + 20;
       this.walkerSpeak.y = this.walkerDesert.y - 40;
       this.walkerDesert.setVelocityX(-150); // move left
@@ -463,12 +456,7 @@ class DesertScene extends Phaser.Scene {
   introRight(final) {
       this.walkerSpeak.x = this.walkerDesert.x + 20;
       this.walkerSpeak.y = this.walkerDesert.y - 60;
-      this.walkerSpeak.text = '';
-      if(final == true) {
-          this.time.delayedCall(2000, function() {
-              this.walkerSpeak.text = 'I was told there would be candy, I see no candy!';
-          }, null, this);
-      }
+      this.walkerSpeak.text = 'I imagined candy heaven would have more candy than this.';
       this.walkerDirection = 'right';
   }
 
@@ -489,7 +477,7 @@ class DesertScene extends Phaser.Scene {
       this.walkerSpeak.text = '';
       this.genie.y = this.genie.y + 800;
       this.sound.play('smokeAudio');
-      var genieStyle = { font: '40px Roboto', fill: 'grey' };
+      var genieStyle = { font: '40px Roboto', fill: 'black' };
       this.genieSpeak = this.add.text(this.genie.x - 180, this.genie.y - 40, 'Welcome!', genieStyle);
       this.time.delayedCall(750, function(){
           this.walkerSpeak.text = '';
@@ -506,7 +494,7 @@ class DesertScene extends Phaser.Scene {
 
   genieIntro() {
       this.genieSpeak.setFontSize(20);
-      this.genieSpeak.x = this.genieSpeak.x - 80;
+      this.genieSpeak.x = this.genieSpeak.x - 180;
       this.genieSpeak.text = 'I am the Genie of Secure Access Management.';
       this.walkerSpeak.text = '';
   }
@@ -517,19 +505,21 @@ class DesertScene extends Phaser.Scene {
   }
 
   genieIntro2() {
-      this.genieSpeak.x = this.genieSpeak.x - 100;
+      this.genieSpeak.x = this.genieSpeak.x;
       this.genieSpeak.text = 'The Genie of Secure Access Management.';
       this.walkerSpeak.text = '';
   }
 
   genieIntro3() {
+      var genieStyle = { font: '40px Roboto', fill: 'black' };
+      this.genieSpeak2 = this.add.text(this.genieSpeak.x + 40, this.genieSpeak.y + 30, 'I am here to grant you an access wish.', this.genieSpeak.style);
       this.walkerSpeak.text = '';
-      this.genieSpeak.text = 'I am here to grant you an access wish.';
   }
 
   allTheCandy() {
       this.walkerSpeak.x = this.walkerSpeak.x - 75;
       this.genieSpeak.text = '';
+      this.genieSpeak2.text = '';
       this.walkerSpeak.text = 'Great! I wish I had access to the candy, all the candy!';
   }
 
@@ -546,23 +536,22 @@ class DesertScene extends Phaser.Scene {
 
   authorAndAthen() {
       this.walkerSpeak.text = '';
-      this.genieSpeak.text = 'You must be first Authenticated and then Authorized.';
-      this.time.delayedCall(3000, function(){
-          this.genieSpeak.x = this.genieSpeak.x + 20
-          this.genieSpeak.y = this.genieSpeak.y + 10
-          this.genieSpeak.text = 'These are the two hallmarks of good access management.';
-      }, null, this);
+      this.genieSpeak2.x = this.genieSpeak2.x - 150;
+      this.genieSpeak2.text = 'You must be Authenticated and then Authorized.';
+      this.genieSpeak3 = this.add.text(this.genieSpeak2.x, this.genieSpeak2.y + 30, 'These are the two hallmarks of good access management.', this.genieSpeak.style);
   }
 
   justCandy() {
       this.walkerSpeak.x = this.walkerSpeak.x - 40;
       this.walkerSpeak.text = 'It is just candy but I will play along, where do we start?';
       this.genieSpeak.text = '';
+      this.genieSpeak2.text = '';
+      this.genieSpeak3.text = '';
   }
 
   authenticated() {
       this.walkerSpeak.text = '';
-      this.genieSpeak.text = 'You must first be authenticated, do you have a valid ID?';
+      this.genieSpeak.text = 'You must be authenticated, do you have a valid ID?';
   }
 
   sureHereYouGo() {
@@ -577,6 +566,7 @@ class DesertScene extends Phaser.Scene {
 
   youAreAuthenticated() {
       this.license.destroy();
+      this.genieSpeak.y = this.genieSpeak.y - 20;
       this.genieSpeak.text = 'Perfect, you are officially Authenticated, now you need to be authorized.';
   }
 
@@ -585,16 +575,18 @@ class DesertScene extends Phaser.Scene {
       this.walkerSpeak.text = 'I am all ears, how do we do that?';
   }
 
-  fiveChallenges() {
-      this.genieSpeak.x = this.genieSpeak.x - 25;
+  threeChallenges() {
+      this.genieSpeak.x = this.genieSpeak.x;
       this.walkerSpeak.text = '';
-      this.genieSpeak.text = 'You must collect five authorization approvals by entering five challenges.';
+      this.genieSpeak2.y = this.genieSpeak2.y - 20;
+      this.genieSpeak2.text = 'You must collect three authorization approvals by entering three challenges.';
   }
 
   passedChallenges() {
-      this.genieSpeak.text = 'Once you have passed all five challenges ';
-      var genieStyle = { font: '40px Roboto', fill: 'grey' };
-      this.genieSpeak2 = this.add.text(this.genieSpeak.x + 40, this.genieSpeak.y + 30, 'you will be granted access to your candy.', this.genieSpeak.style);
+      this.genieSpeak.y = this.genieSpeak.y + 20;
+      this.genieSpeak2.y = this.genieSpeak2.y + 20;
+      this.genieSpeak.text = 'Once you have passed all three challenges ';
+      this.genieSpeak2.text = 'you will be granted access to your candy.';
   }
 
   aLotOfWork() {
@@ -605,6 +597,7 @@ class DesertScene extends Phaser.Scene {
 
   importantWork() {
       this.genieSpeak.text = 'Yes, it is a lot of work, a lot of very important work.';
+      this.genieSpeak2.x = this.genieSpeak2.x + 40;
       this.genieSpeak2.text = 'Secure access management is mission critical!';
       this.walkerSpeak.text = '';
   }
@@ -631,7 +624,7 @@ class DesertScene extends Phaser.Scene {
 
   showCoins() {
       this.sound.play('newPlayerAudio');
-      var style = { font: '20px Roboto', fill: 'grey' };
+      var style = { font: '20px Roboto', fill: 'black' };
       this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
       this.approvalsScore = this.add.text(170, 15, '0/3', style);
       this.coins.forEach(function(value) {
