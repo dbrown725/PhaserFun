@@ -22,6 +22,12 @@ class GiantScene extends Phaser.Scene {
   genieSpeak2:  Phaser.GameObjects.Text;
   underConstruction:  Phaser.GameObjects.Text;
   giantUnderConstruction:  Phaser.GameObjects.Text;
+  castleWall: Phaser.GameObjects.Sprite;
+  castleWall2: Phaser.GameObjects.Sprite;
+  castleWall3: Phaser.GameObjects.Sprite;
+  greyTower1: Phaser.GameObjects.Sprite;
+  greyTower2: Phaser.GameObjects.Sprite;
+  giant: Phaser.GameObjects.Sprite;
 
   cursors: any;
   walkerDirection: string;
@@ -35,7 +41,7 @@ class GiantScene extends Phaser.Scene {
   score: integer;
   openDoor: boolean;
   growSmoke: boolean
-
+  secondsPassed: integer;
 
   constructor() {
     super({
@@ -51,6 +57,7 @@ class GiantScene extends Phaser.Scene {
       this.score = 0;
       this.openDoor = false;
       this.growSmoke = false;
+      this.secondsPassed = 0;
 
       //Allows for default pointer plus one. Needed so the jump button
       //and a left or right button can be pressed at the same time
@@ -72,10 +79,49 @@ class GiantScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image('wallCastle', 'assets/sprites/castle_wall.png');
+    this.load.image('towerGrey', 'assets/sprites/tower_grey.png');
+    this.load.image('castleGiant', 'assets/sprites/giant.png');
   }
 
   create() {
     this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'desertBG');
+
+    this.giant = this.add.sprite(this.sys.canvas.width * .835, this.sys.canvas.height * .215, 'castleGiant');
+    this.giant.setName('giantOfCastle');
+    this.giant.setOrigin(0, 0);
+    this.giant.setScale(.25, .25);
+    this.giant.setInteractive(true, function() { });
+
+    this.castleWall = this.add.sprite(this.sys.canvas.width * .295, this.sys.canvas.height * .315, 'wallCastle');
+    this.castleWall.setName('castleWall1');
+    this.castleWall.setOrigin(0, 0);
+    this.castleWall.setScale(1, 1);
+    this.castleWall.setInteractive(true, function() { });
+
+    this.castleWall2 = this.add.sprite(this.sys.canvas.width * .725, this.sys.canvas.height * .315, 'wallCastle');
+    this.castleWall2.setName('castleWall2');
+    this.castleWall2.setOrigin(0, 0);
+    this.castleWall2.setScale(1, 1);
+    this.castleWall2.setInteractive(true, function() { });
+
+    this.castleWall3 = this.add.sprite(this.sys.canvas.width * -.125, this.sys.canvas.height * .315, 'wallCastle');
+    this.castleWall3.setName('castleWall3');
+    this.castleWall3.setOrigin(0, 0);
+    this.castleWall3.setScale(1, 1);
+    this.castleWall3.setInteractive(true, function() { });
+
+    this.greyTower1 = this.add.sprite(this.sys.canvas.width * .245, this.sys.canvas.height * .04, 'towerGrey');
+    this.greyTower1.setName('grreyTower1');
+    this.greyTower1.setOrigin(0, 0);
+    this.greyTower1.setScale(1, 1);
+    this.greyTower1.setInteractive(true, function() { });
+
+    this.greyTower2 = this.add.sprite(this.sys.canvas.width * .685, this.sys.canvas.height * .04, 'towerGrey');
+    this.greyTower2.setName('greyTower2');
+    this.greyTower2.setOrigin(0, 0);
+    this.greyTower2.setScale(1, 1);
+    this.greyTower2.setInteractive(true, function() { });
 
     this.tomb = this.add.sprite(this.sys.canvas.width * .825, this.sys.canvas.height * -.088, 'tomb');
     this.tomb.setName('tomb');
@@ -103,7 +149,7 @@ class GiantScene extends Phaser.Scene {
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 40, 'ground').setScale(6, 2).refreshBody();
 
-    var style = { font: '20px Roboto', fill: 'grey' };
+    var style = { font: '20px Roboto', fill: 'black' };
     this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
     this.approvalsScore = this.add.text(170, 15, '2/3', style);
 
@@ -135,7 +181,7 @@ class GiantScene extends Phaser.Scene {
     });
     this.walkerDirection = 'right';
 
-    var walkerStyle = { font: '20px Roboto', fill: 'grey' };
+    var walkerStyle = { font: '20px Roboto', fill: 'black' };
     this.walkerSpeak = this.add.text(this.walker.x + 20, this.walker.y - 40, '', walkerStyle);
 
     this.physics.add.collider(this.walker, this.platforms);
@@ -242,6 +288,16 @@ class GiantScene extends Phaser.Scene {
       }
     }
 
+    var timeInSeconds = Math.floor( time / 1000);
+    if(this.secondsPassed != timeInSeconds) {
+      this.secondsPassed = timeInSeconds;
+      console.log('secondsPassed', this.secondsPassed);
+      if(this.secondsPassed % 10 == 0) {
+        console.log('shake!!!');
+        this.cameras.main.shake(500, .005);
+      }
+    }
+
     if(this.walker.x > 618 && this.walker.y > 227) {
         var underConstructionStyle = { font: '30px Roboto', fill: 'red' };
         this.underConstruction = this.add.text(150, 60, 'Candy Heaven still under construction.', underConstructionStyle);
@@ -326,7 +382,7 @@ class GiantScene extends Phaser.Scene {
       this.genie.y = this.genie.y + 800;
       this.sound.play('smokeAudio');
       this.growSmoke = true;
-      var genieStyle = { font: '20px Roboto', fill: 'grey' };
+      var genieStyle = { font: '20px Roboto', fill: 'black' };
       this.genieSpeak = this.add.text(this.genie.x - 440, this.genie.y + 20, '', genieStyle);
       this.genieSpeak.text = 'Congrats! You have completed all three challenges.';
       this.genieSpeak2 = this.add.text(this.genie.x - 410, this.genie.y + 60, '', genieStyle);

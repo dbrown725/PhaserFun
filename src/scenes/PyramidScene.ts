@@ -82,7 +82,7 @@ preload ()
 
   create() {
 
-    var style = { font: '20px Roboto', fill: 'grey' };
+    var style = { font: '20px Roboto', fill: 'white' };
     this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
     this.approvalsScore = this.add.text(170, 15, '1/3', style);
 
