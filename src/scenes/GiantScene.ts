@@ -248,12 +248,11 @@ class GiantScene extends Phaser.Scene {
         repeat: -1
     });
 
-    var coinLocation = [[5, .2]];
-    coinLocation.push([4.5, .3], [5.5, .3]);
-    coinLocation.push([4, .4], [5, .4], [6, .4]);
-    coinLocation.push([3.5, .5], [4.5, .5], [5.5, .5], [6.5, .5]);
-    coinLocation.push([3, .6], [4, .6], [5, .6], [6, .6], [7, .6]);
-    coinLocation.push([2.5, .7], [3.5, .7], [4.5, .7], [5.5, .7], [6.5, .7], [7.5, .7]);
+    var coinLocation = [[3.5, .3], [4.5, .3], [5.5, .3]];
+    coinLocation.push([3, .4], [4, .4], [5, .4], [6, .4]);
+    coinLocation.push([2.5, .5], [3.5, .5], [4.5, .5], [5.5, .5], [6.5, .5]);
+    coinLocation.push([2, .6], [3, .6], [4, .6], [5, .6], [6, .6], [7, .6]);
+    coinLocation.push([1.5, .7], [2.5, .7], [3.5, .7], [4.5, .7], [5.5, .7], [6.5, .7], [7.5, .7]);
     this.coins = [];
     var min=1;
     var max=1000;
@@ -366,7 +365,7 @@ class GiantScene extends Phaser.Scene {
     coin.destroy();
     this.score = this.score + 1;
     //this.approvalsScore.text = this.score.toString();
-    if(this.score >= 21) {
+    if(this.score >= 25) {
         //this.door.setY(this.door.y - 50);
         var timer2 = 0;
         this.time.delayedCall(timer2 += 2000, this.showGenieCongrats, null, this);
