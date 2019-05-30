@@ -22,6 +22,7 @@ class DesertScene extends Phaser.Scene {
   genieSpeak:  Phaser.GameObjects.Text;
   genieSpeak2:  Phaser.GameObjects.Text;
   genieSpeak3:  Phaser.GameObjects.Text;
+  genieSpeak4:  Phaser.GameObjects.Text;
   camera: Phaser.Cameras.Scene2D.Camera;
 
   cursors: any;
@@ -281,16 +282,16 @@ class DesertScene extends Phaser.Scene {
     this.time.delayedCall(timer += 3000, this.grantedAccess, null, this);
     //this.time.delayedCall(timer += 4000, this.howDoWeDoThat, null, this);
     this.time.delayedCall(timer += 3000, this.authorAndAthen, null, this);
-    this.time.delayedCall(timer += 5500, this.justCandy, null, this);
-    this.time.delayedCall(timer += 3000, this.authenticated, null, this);
-    this.time.delayedCall(timer += 3000, this.sureHereYouGo, null, this);
-    this.time.delayedCall(timer += 2000, this.showLicense, null, this);
+    //this.time.delayedCall(timer += 5500, this.justCandy, null, this);
+    //this.time.delayedCall(timer += 3000, this.authenticated, null, this);
+    //this.time.delayedCall(timer += 3000, this.sureHereYouGo, null, this);
+    this.time.delayedCall(timer += 6000, this.showLicense, null, this);
     this.time.delayedCall(timer += 2000, this.youAreAuthenticated, null, this);
     //this.time.delayedCall(timer += 3000, this.allEars, null, this);
     this.time.delayedCall(timer += 2000, this.threeChallenges, null, this);
     this.time.delayedCall(timer += 5500, this.passedChallenges, null, this);
-    this.time.delayedCall(timer += 4000, this.aLotOfWork, null, this);
-    this.time.delayedCall(timer += 3500, this.importantWork, null, this);
+    //this.time.delayedCall(timer += 4000, this.aLotOfWork, null, this);
+    //this.time.delayedCall(timer += 3500, this.importantWork, null, this);
     this.time.delayedCall(timer += 5500, this.doThis, null, this);
     this.time.delayedCall(timer += 3500, this.goodLuck, null, this);
     this.time.delayedCall(timer += 4000, this.hideGenie, null, this);
@@ -301,7 +302,7 @@ class DesertScene extends Phaser.Scene {
         this.scene.start('Advertisement1Scene', {});
     }, this);
 
-    this.camera.fadeIn(3000, 1);
+    this.camera.fadeIn(1000, 1);
     this.fadeOutStarted = false;
   }
 
@@ -471,10 +472,12 @@ class DesertScene extends Phaser.Scene {
   }
 
   introRight(final) {
-      this.walkerSpeak.x = this.walkerDesert.x + 20;
-      this.walkerSpeak.y = this.walkerDesert.y - 60;
-      this.walkerSpeak.text = 'I imagined candy heaven would have more candy than this.';
       this.walkerDirection = 'right';
+      this.time.delayedCall(750, function(){
+        this.walkerSpeak.x = this.walkerDesert.x + 20;
+        this.walkerSpeak.y = this.walkerDesert.y - 60;
+        this.walkerSpeak.text = 'I imagined candy heaven having more candy.';
+      }, null, this);
   }
 
   introLeft(final) {
@@ -556,6 +559,7 @@ class DesertScene extends Phaser.Scene {
       this.genieSpeak2.x = this.genieSpeak2.x - 150;
       this.genieSpeak2.text = 'You must be Authenticated and then Authorized.';
       this.genieSpeak3 = this.add.text(this.genieSpeak2.x, this.genieSpeak2.y + 30, 'These are the two hallmarks of good access management.', this.genieSpeak.style);
+      this.genieSpeak4 = this.add.text(this.genieSpeak3.x, this.genieSpeak3.y + 30, 'You must be first authenticated, do you have a valid ID?', this.genieSpeak.style);
   }
 
   justCandy() {
@@ -564,6 +568,7 @@ class DesertScene extends Phaser.Scene {
       this.genieSpeak.text = '';
       this.genieSpeak2.text = '';
       this.genieSpeak3.text = '';
+      this.genieSpeak4.text = '';
   }
 
   authenticated() {
@@ -578,6 +583,10 @@ class DesertScene extends Phaser.Scene {
 
   showLicense() {
       this.walkerSpeak.text = '';
+      this.genieSpeak.text = '';
+      this.genieSpeak2.text = '';
+      this.genieSpeak3.text = '';
+      this.genieSpeak4.text = '';
       this.license.y = this.license.y + 800;
   }
 
