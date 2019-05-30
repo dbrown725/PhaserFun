@@ -22,6 +22,7 @@ class DesertScene extends Phaser.Scene {
   genieSpeak:  Phaser.GameObjects.Text;
   genieSpeak2:  Phaser.GameObjects.Text;
   genieSpeak3:  Phaser.GameObjects.Text;
+  camera: Phaser.Cameras.Scene2D.Camera;
 
   cursors: any;
   walkerDirection: string;
@@ -35,6 +36,7 @@ class DesertScene extends Phaser.Scene {
   score: integer;
   openDoor: boolean;
   growSmoke: boolean
+  fadeOutStarted: boolean;
 
 
   constructor() {
@@ -293,6 +295,14 @@ class DesertScene extends Phaser.Scene {
     this.time.delayedCall(timer += 3500, this.goodLuck, null, this);
     this.time.delayedCall(timer += 4000, this.hideGenie, null, this);
     this.time.delayedCall(timer += 2500, this.showCoins, null, this);
+
+    this.camera = this.cameras.main;
+    this.camera.on('camerafadeoutcomplete', function() {
+        this.scene.start('Advertisement1Scene', {});
+    }, this);
+
+    this.camera.fadeIn(3000, 1);
+    this.fadeOutStarted = false;
   }
 
   update(time: number, delta: number) {
@@ -311,8 +321,11 @@ class DesertScene extends Phaser.Scene {
       }
     }
 
-    if(this.walkerDesert.x > 618 && this.walkerDesert.y > 227) {
-        this.scene.start('Advertisement1Scene', {});
+    if(!this.fadeOutStarted && (this.walkerDesert.x > 618 && this.walkerDesert.y > 227)) {
+        //once fade out starts don't want to enter this code again
+        this.fadeOutStarted = true;
+        //fadeout listener will initiate scene change
+        this.cameras.main.fade(2000);
     }
 
     if (this.isFirstLoop == true) {

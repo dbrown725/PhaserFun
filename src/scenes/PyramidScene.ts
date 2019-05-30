@@ -19,6 +19,7 @@ class PyramidScene extends Phaser.Scene {
   doorInterior2: Phaser.Physics.Arcade.Sprite;
   doorInteriorBlack2: Phaser.Physics.Arcade.Sprite;
   smoke: Phaser.GameObjects.Sprite;
+  camera: Phaser.Cameras.Scene2D.Camera;
 
   cursors: any;
   walkerDirection: string;
@@ -34,6 +35,7 @@ class PyramidScene extends Phaser.Scene {
   isInitial: boolean;
   initialCount: integer;
   growSmoke = true;
+  fadeOutStarted: boolean;
 
   constructor() {
     super({
@@ -238,6 +240,12 @@ preload ()
     }, this);
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
     this.sound.play('newPlayerAudio');
+    this.camera = this.cameras.main;
+    this.camera.on('camerafadeoutcomplete', function() {
+        this.scene.start('Advertisement2Scene', {});
+    }, this);
+    this.camera.fadeIn(3000, 1);
+    this.fadeOutStarted = false;
   }
 
   update(time: number, delta: number) {
@@ -256,8 +264,9 @@ preload ()
       }
     }
 
-    if(this.walker.x > 618 && this.walker.y > 210 ) {
-        this.scene.start('Advertisement2Scene', {});
+    if(!this.fadeOutStarted && this.walker.x > 618 && this.walker.y > 210 ) {
+        this.fadeOutStarted = true;
+        this.cameras.main.fade(2000);
     }
     if(this.isInitial) {
         this.initialCount = this.initialCount + 1;

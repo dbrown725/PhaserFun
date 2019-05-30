@@ -5,19 +5,22 @@ class WelcomeScene extends Phaser.Scene {
   walker: Phaser.Physics.Arcade.Sprite;
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
-  cursors: any;
-  enter: any;
-  isMobile: boolean;
   smoke: Phaser.GameObjects.Sprite;
   startButton: Phaser.Physics.Arcade.Sprite;
-  title: Phaser.Physics.Arcade.Sprite;
-  start: boolean;
   lollipopBase1: Phaser.Physics.Arcade.Sprite;
   lollipopFruitGreen: Phaser.Physics.Arcade.Sprite;
   lollipopBase2: Phaser.Physics.Arcade.Sprite;
   lollipopWhiteGreen: Phaser.Physics.Arcade.Sprite;
   lollipopBase3: Phaser.Physics.Arcade.Sprite;
   lollipopWhiteRed: Phaser.Physics.Arcade.Sprite;
+  camera: Phaser.Cameras.Scene2D.Camera;
+
+  fadeOutStarted: boolean;
+  cursors: any;
+  enter: any;
+  isMobile: boolean;
+  title: Phaser.Physics.Arcade.Sprite;
+  start: boolean;
 
   constructor() {
     super({
@@ -96,19 +99,24 @@ class WelcomeScene extends Phaser.Scene {
     this.lollipopWhiteRed.setScale(.6).refreshBody();
 
     console.log('navigator.userAgent', navigator.userAgent);
+
+    this.camera = this.cameras.main;
+    this.camera.on('camerafadeoutcomplete', function() {
+        this.scene.start('DesertScene', {});
+    }, this);
+    this.camera.fadeIn(3000, 1);
+    this.fadeOutStarted = false;
   }
 
   update(time: number, delta: number) {
-    if(this.start) {
-      this.scene.start('DesertScene', {});
+    if(!this.fadeOutStarted  && (this.start || this.cursors.space.isDown || this.enter.isDown)) {
+      this.fadeOutStarted = true;
+      this.cameras.main.fade(2000);
     }
     if(this.smoke.scaleX < 5) {
       this.smoke.alpha = this.smoke.alpha - .01;
       this.smoke.scaleX = this.smoke.scaleX * 1.01;
       this.smoke.scaleY = this.smoke.scaleY * 1.01;
-    }
-    if (this.cursors.space.isDown || this.enter.isDown) {
-      this.scene.start('DesertScene', {});
     }
   }
 

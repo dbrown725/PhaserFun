@@ -1,13 +1,16 @@
 class Advertisement1Scene extends Phaser.Scene {
   background: Phaser.GameObjects.Sprite;
   rightButton: Phaser.Physics.Arcade.Sprite;
+  camera: Phaser.Cameras.Scene2D.Camera;
+  countDownText:  Phaser.GameObjects.Text;
+
   cursors: any;
   isContinue: boolean;
   countDown: integer;
-  countDownText:  Phaser.GameObjects.Text;
   secondsPassed: integer;
   continueKey: any;
   isMobile: boolean;
+  fadeOutStarted: boolean;
 
   constructor() {
     super({
@@ -59,7 +62,12 @@ class Advertisement1Scene extends Phaser.Scene {
       this.rightButton.y = this.rightButton.y - 800;
     }
 
-
+    this.camera = this.cameras.main;
+    this.camera.on('camerafadeoutcomplete', function() {
+        this.scene.start('PyramidScene', {});
+    }, this);
+    this.camera.fadeIn(3000, 1);
+    this.fadeOutStarted = false;
   }
 
   showRightButton(){
@@ -81,8 +89,10 @@ class Advertisement1Scene extends Phaser.Scene {
         }
       }
     }
-    if(this.isContinue || this.continueKey.isDown) {
-        this.scene.start('PyramidScene', {});
+    if(!this.fadeOutStarted && (this.isContinue || this.continueKey.isDown)) {
+      this.fadeOutStarted = true;
+      //fadeout listener will initiate scene change
+      this.cameras.main.fade(2000);
     }
   }
 }
