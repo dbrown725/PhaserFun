@@ -6,6 +6,7 @@ import PyramidScene from './scenes/PyramidScene';
 import Advertisement1Scene from './scenes/Advertisement1Scene';
 import Advertisement2Scene from './scenes/Advertisement2Scene';
 import GiantScene from './scenes/GiantScene';
+import CandyHeavenScene from './scenes/CandyHeavenScene';
 
 const config:GameConfig = {
     type: Phaser.AUTO,
@@ -25,7 +26,7 @@ const config:GameConfig = {
         }
     },
     scene: [
-      WelcomeScene, DesertScene, Advertisement1Scene, PyramidScene, Advertisement2Scene, GiantScene
+      WelcomeScene, DesertScene, Advertisement1Scene, PyramidScene, Advertisement2Scene, GiantScene, CandyHeavenScene
     ]
 };
 

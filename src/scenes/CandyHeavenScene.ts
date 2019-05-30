@@ -1,4 +1,4 @@
-class WelcomeScene extends Phaser.Scene {
+class CandyHeavenScene extends Phaser.Scene {
   background: Phaser.GameObjects.Sprite;
   background2: Phaser.GameObjects.Sprite;
   ground: Phaser.Physics.Arcade.Image;
@@ -6,7 +6,6 @@ class WelcomeScene extends Phaser.Scene {
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
   smoke: Phaser.GameObjects.Sprite;
-  startButton: Phaser.Physics.Arcade.Sprite;
   lollipopBase1: Phaser.Physics.Arcade.Sprite;
   lollipopFruitGreen: Phaser.Physics.Arcade.Sprite;
   lollipopBase2: Phaser.Physics.Arcade.Sprite;
@@ -16,15 +15,12 @@ class WelcomeScene extends Phaser.Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
 
   fadeOutStarted: boolean;
-  cursors: any;
-  enter: any;
   isMobile: boolean;
-  title: Phaser.Physics.Arcade.Sprite;
-  start: boolean;
+  gameOverTitle: Phaser.Physics.Arcade.Sprite;
 
   constructor() {
     super({
-      key: 'WelcomeScene'
+      key: 'CandyHeavenScene'
     });
   }
 
@@ -46,16 +42,7 @@ class WelcomeScene extends Phaser.Scene {
 
   preload() {
     //visuals
-    this.load.image('ground', 'assets/sprites/platformTransparent.png');
-    this.load.atlasXML('backGroundSprites', 'assets/sprites/bgElements_spritesheet.png', 'assets/sprites/bgElements_spritesheet.xml');
-    this.load.image('smoke', '/assets/sprites/smoke.png');
-    this.load.image('btnStart', 'assets/sprites/startButton.png');
-    this.load.image('candyHeavenTitle', 'assets/sprites/candyHeavenKenney.png');
-    this.load.image('lolliBase', 'assets/sprites/lollipopBaseBeige.png');
-    this.load.image('lolliFruitGreen', 'assets/sprites/lollipopFruitGreen.png');
-    this.load.image('lolliWhiteGreen', 'assets/sprites/lollipopWhiteGreen.png');
-    this.load.image('lolliWhiteRed', 'assets/sprites/lollipopWhiteRed.png');
-    this.load.atlas('walker', 'assets/sprites/leftRightWalk.png', 'assets/sprites/leftRightWalk.json');
+    this.load.image('gameOver', 'assets/sprites/gameOver.png');
   }
 
   create() {
@@ -69,18 +56,8 @@ class WelcomeScene extends Phaser.Scene {
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
 
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.enter = this.input.keyboard.addKey('ENTER');
-
-
-    this.title = this.physics.add.staticSprite(this.cameras.main.centerX, this.cameras.main.centerY - 110, 'candyHeavenTitle');
-    this.title.setScale(.9).refreshBody();
-
-    this.startButton = this.physics.add.staticSprite(this.cameras.main.centerX, this.cameras.main.centerY + 60, 'btnStart');
-    this.startButton.setScale(.9).refreshBody();
-    this.startButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
-      this.start = true;
-    }, this);
+    this.gameOverTitle = this.physics.add.staticSprite(this.cameras.main.centerX, this.cameras.main.centerY - 110, 'gameOver');
+    this.gameOverTitle.setScale(.9).refreshBody();
 
     this.walker = this.physics.add.staticSprite(100, this.sys.canvas.height * 0.8, 'walker', 'player_11.png');
     this.walker.setScale(0.50, 0.50);
@@ -104,15 +81,11 @@ class WelcomeScene extends Phaser.Scene {
     this.camera.on('camerafadeoutcomplete', function() {
         this.scene.start('DesertScene', {});
     }, this);
-    this.camera.fadeIn(1000, 1);
+    this.camera.fadeIn(3000, 1);
     this.fadeOutStarted = false;
   }
 
   update(time: number, delta: number) {
-    if(!this.fadeOutStarted  && (this.start || this.cursors.space.isDown || this.enter.isDown)) {
-      this.fadeOutStarted = true;
-      this.cameras.main.fade(2000);
-    }
     if(this.smoke.scaleX < 5) {
       this.smoke.alpha = this.smoke.alpha - .01;
       this.smoke.scaleX = this.smoke.scaleX * 1.01;
@@ -122,4 +95,4 @@ class WelcomeScene extends Phaser.Scene {
 
 }
 
-export default WelcomeScene;
+export default CandyHeavenScene;

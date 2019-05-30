@@ -273,9 +273,9 @@ class GiantScene extends Phaser.Scene {
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
 
     this.camera = this.cameras.main;
-    // this.camera.on('camerafadeoutcomplete', function() {
-    //     this.scene.start('CandyHeavenScene', {});
-    // }, this);
+    this.camera.on('camerafadeoutcomplete', function() {
+        this.scene.start('CandyHeavenScene', {});
+    }, this);
     this.camera.fadeIn(3000, 1);
     this.fadeOutStarted = false;
   }
@@ -306,13 +306,13 @@ class GiantScene extends Phaser.Scene {
 
     if(!this.fadeOutStarted && (this.walker.x > 618 && this.walker.y > 227)) {
         this.fadeOutStarted = true;
-        var underConstructionStyle = { font: '30px Roboto', fill: 'red' };
-        this.underConstruction = this.add.text(150, 60, 'Candy Heaven still under construction.', underConstructionStyle);
+        //var underConstructionStyle = { font: '30px Roboto', fill: 'red' };
+        //this.underConstruction = this.add.text(150, 60, 'Candy Heaven still under construction.', underConstructionStyle);
         //hide the buttons
-        // this.jumpButton.y = this.jumpButton.y - 800;
-        // this.leftButton.y = this.leftButton.y - 800;
-        // this.rightButton.y = this.rightButton.y - 800;
-        //        this.cameras.main.fade(2000);
+        this.jumpButton.y = this.jumpButton.y - 800;
+        this.leftButton.y = this.leftButton.y - 800;
+        this.rightButton.y = this.rightButton.y - 800;
+        this.cameras.main.fade(2000);
     }
     if ((this.cursors.left.isDown || this.moveLeft)
       && (this.walker.body.blocked.down || this.walker.body.touching.down)) // if the left arrow key is down or touch left button

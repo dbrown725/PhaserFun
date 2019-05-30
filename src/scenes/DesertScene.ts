@@ -285,7 +285,7 @@ class DesertScene extends Phaser.Scene {
     //this.time.delayedCall(timer += 5500, this.justCandy, null, this);
     //this.time.delayedCall(timer += 3000, this.authenticated, null, this);
     //this.time.delayedCall(timer += 3000, this.sureHereYouGo, null, this);
-    this.time.delayedCall(timer += 6000, this.showLicense, null, this);
+    this.time.delayedCall(timer += 7000, this.showLicense, null, this);
     this.time.delayedCall(timer += 2000, this.youAreAuthenticated, null, this);
     //this.time.delayedCall(timer += 3000, this.allEars, null, this);
     this.time.delayedCall(timer += 2000, this.threeChallenges, null, this);
@@ -302,7 +302,7 @@ class DesertScene extends Phaser.Scene {
         this.scene.start('Advertisement1Scene', {});
     }, this);
 
-    this.camera.fadeIn(1000, 1);
+    this.camera.fadeIn(3000, 1);
     this.fadeOutStarted = false;
   }
 
@@ -476,7 +476,7 @@ class DesertScene extends Phaser.Scene {
       this.time.delayedCall(750, function(){
         this.walkerSpeak.x = this.walkerDesert.x + 20;
         this.walkerSpeak.y = this.walkerDesert.y - 60;
-        this.walkerSpeak.text = 'I imagined candy heaven having more candy.';
+        this.walkerSpeak.text = 'I imagined Candy Heaven having more candy.';
       }, null, this);
   }
 
