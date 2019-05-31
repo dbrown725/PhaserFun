@@ -1,11 +1,11 @@
 class WelcomeScene extends Phaser.Scene {
   background: Phaser.GameObjects.Sprite;
   background2: Phaser.GameObjects.Sprite;
+  background3: Phaser.GameObjects.Sprite;
   ground: Phaser.Physics.Arcade.Image;
   walker: Phaser.Physics.Arcade.Sprite;
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
-  smoke: Phaser.GameObjects.Sprite;
   startButton: Phaser.Physics.Arcade.Sprite;
   lollipopBase1: Phaser.Physics.Arcade.Sprite;
   lollipopFruitGreen: Phaser.Physics.Arcade.Sprite;
@@ -14,6 +14,7 @@ class WelcomeScene extends Phaser.Scene {
   lollipopBase3: Phaser.Physics.Arcade.Sprite;
   lollipopWhiteRed: Phaser.Physics.Arcade.Sprite;
   camera: Phaser.Cameras.Scene2D.Camera;
+  billowingClouds: Phaser.GameObjects.Sprite[];
 
   fadeOutStarted: boolean;
   cursors: any;
@@ -61,10 +62,23 @@ class WelcomeScene extends Phaser.Scene {
   create() {
     this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'backGroundSprites', 'clouds1.png');
     this.background.setScale(.785);
-    this.background2 = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 65, 'backGroundSprites', 'clouds1.png');
+    this.background2 = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 70, 'backGroundSprites', 'clouds1.png');
     this.background2.setScale(.785);
-    this.smoke = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'smoke');
-    this.smoke.setScale(2);
+    this.background3 = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 90, 'backGroundSprites', 'clouds1.png');
+    this.background3.setScale(.785);
+
+    var cloudLocation = [[-250, 15], [-200, 35], [-150, 85], [-85, 85], [0, 85], [85, 85], [150, 85], [200, 85], [250, 85]];
+    this.billowingClouds = [];
+    var min=2;
+    var max=8;
+    cloudLocation.forEach(function(value) {
+      var newCloud = this.physics.add.staticSprite(this.cameras.main.centerX + value[0], this.cameras.main.centerY + value[1], 'smoke');
+      //newCloud.scaleX = (Math.random() * (+max - +min) + +min);
+      //newCloud.scaleY = (Math.random() * (+max - +min) + +min);
+      newCloud.setScale(Math.random() * (+max - +min) + +min);
+      newCloud.alpha = .3;
+      this.billowingClouds.push(newCloud);
+    }, this);
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
@@ -106,6 +120,7 @@ class WelcomeScene extends Phaser.Scene {
     }, this);
     this.camera.fadeIn(1000, 1);
     this.fadeOutStarted = false;
+
   }
 
   update(time: number, delta: number) {
@@ -113,11 +128,23 @@ class WelcomeScene extends Phaser.Scene {
       this.fadeOutStarted = true;
       this.cameras.main.fade(2000);
     }
-    if(this.smoke.scaleX < 5) {
-      this.smoke.alpha = this.smoke.alpha - .01;
-      this.smoke.scaleX = this.smoke.scaleX * 1.01;
-      this.smoke.scaleY = this.smoke.scaleY * 1.01;
-    }
+    this.billowingClouds.forEach(function(value) {
+      if(value.scaleX < 15) {
+        value.alpha = value.alpha - .0003;
+        value.scaleX = value.scaleX * 1.001;
+        value.scaleY = value.scaleY * 1.001;
+        value.y = value.y + .004;
+      }
+      else {
+        var min=2;
+        var max=8;
+        value.alpha = .3;
+        //value.scaleX = (Math.random() * (+max - +min) + +min);
+        //value.scaleY = (Math.random() * (+max - +min) + +min);
+        value.setScale(Math.random() * (+max - +min) + +min);
+        value.y = this.cameras.main.centerY + 140;
+      }
+    }, this);
   }
 
 }
