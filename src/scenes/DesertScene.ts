@@ -273,7 +273,7 @@ class DesertScene extends Phaser.Scene {
     this.time.delayedCall(timer += 1000, this.jumpRight, null, this);
     this.time.delayedCall(timer += 1000, this.jumpLeft, [true], this);
     this.time.delayedCall(timer += 1000, this.introRight, [true], this);
-    this.time.delayedCall(timer += 4500, this.showGenie, null, this);
+    this.time.delayedCall(timer += 4000, this.showGenie, null, this);
     this.time.delayedCall(timer += 1000, this.whoAreYou, null, this);
     this.time.delayedCall(timer += 2000, this.genieIntro, null, this);
     //this.time.delayedCall(timer += 2000, this.genieIntro2, null, this);
@@ -411,6 +411,8 @@ class DesertScene extends Phaser.Scene {
       this.genie.y = this.genie.y + 800;
       this.sound.play('smokeAudio');
       this.growSmoke = true;
+      this.genieSpeak.y = this.genieSpeak.y + 20;
+      this.genieSpeak2.y = this.genieSpeak2.y + 20;
       this.genieSpeak.text = 'Congrats! You have completed your first challenge.';
       this.genieSpeak2.text = 'Here is your first authorization approval.';
       this.time.delayedCall(2000, function(){
@@ -428,8 +430,8 @@ class DesertScene extends Phaser.Scene {
   }
 
   genieSecurityTip() {
-      this.genieSpeak.y = this.genieSpeak.y + 60;
-      this.genieSpeak2.y = this.genieSpeak2.y + 60;
+      this.genieSpeak.y = this.genieSpeak.y + 40;
+      this.genieSpeak2.y = this.genieSpeak2.y + 40;
       this.genieSpeak.text = 'The Genie says: Always secure your passwords.';
       this.genieSpeak2.text = 'Never share your passwords with anyone!';
   }

@@ -150,7 +150,7 @@ preload ()
     this.genie.setScale(.2, .2);
     this.genie.y = this.genie.y - 800; //hide off screen for now
 
-    this.smoke = this.add.sprite(this.sys.canvas.width * .95, this.sys.canvas.height * .275, 'smoke');
+    this.smoke = this.add.sprite(this.sys.canvas.width * .95, this.sys.canvas.height * .295, 'smoke');
     this.smoke.setScale(.001);
 
     this.doorInterior = this.physics.add.staticSprite(5, this.sys.canvas.height * .05, 'doorInterior');

@@ -67,7 +67,7 @@ class WelcomeScene extends Phaser.Scene {
     this.background3 = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 90, 'backGroundSprites', 'clouds1.png');
     this.background3.setScale(.785);
 
-    var cloudLocation = [[-250, 15], [-200, 35], [-150, 85], [-85, 85], [0, 85], [85, 85], [150, 85], [200, 85], [250, 85]];
+    var cloudLocation = [[-350, 85], [-300, 65], [-250, 55], [-200, 55], [-150, 85], [-85, 85], [0, 85], [85, 85], [150, 85], [200, 85], [250, 85], [300, 85], [350, 85]];
     this.billowingClouds = [];
     var min=2;
     var max=8;
@@ -129,20 +129,25 @@ class WelcomeScene extends Phaser.Scene {
       this.cameras.main.fade(2000);
     }
     this.billowingClouds.forEach(function(value) {
-      if(value.scaleX < 15) {
+      if(value.scaleX < 17) {
         value.alpha = value.alpha - .0003;
-        value.scaleX = value.scaleX * 1.001;
-        value.scaleY = value.scaleY * 1.001;
-        value.y = value.y + .004;
-      }
-      else {
-        var min=2;
+        value.scaleX = value.scaleX * 1.0015;
+        value.scaleY = value.scaleY * 1.0015;
+        if(value.y < this.cameras.main.centerY + 85) {
+            value.y = value.y + .004;
+        } else {
+            value.y = value.y + .084;
+        }
+      } else {
+        var min=1;
         var max=8;
         value.alpha = .3;
-        //value.scaleX = (Math.random() * (+max - +min) + +min);
-        //value.scaleY = (Math.random() * (+max - +min) + +min);
         value.setScale(Math.random() * (+max - +min) + +min);
-        value.y = this.cameras.main.centerY + 140;
+        if(value.x < this.cameras.main.centerX - 175) {
+          value.y = this.cameras.main.centerY + 90;
+        } else {
+          value.y = this.cameras.main.centerY + 140;
+        }
       }
     }, this);
   }
