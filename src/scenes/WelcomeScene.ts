@@ -129,7 +129,7 @@ class WelcomeScene extends Phaser.Scene {
       this.cameras.main.fade(2000);
     }
     this.billowingClouds.forEach(function(value) {
-      if(value.scaleX < 17) {
+      if(value.scaleX < 12) {
         value.alpha = value.alpha - .0003;
         value.scaleX = value.scaleX * 1.0015;
         value.scaleY = value.scaleY * 1.0015;
@@ -139,15 +139,15 @@ class WelcomeScene extends Phaser.Scene {
             value.y = value.y + .084;
         }
       } else {
-        var min=1;
-        var max=8;
-        value.alpha = .3;
-        value.setScale(Math.random() * (+max - +min) + +min);
-        if(value.x < this.cameras.main.centerX - 175) {
-          value.y = this.cameras.main.centerY + 90;
-        } else {
-          value.y = this.cameras.main.centerY + 140;
-        }
+        // var min=1;
+        // var max=8;
+        // value.alpha = .3;
+        // value.setScale(Math.random() * (+max - +min) + +min);
+        // if(value.x < this.cameras.main.centerX - 175) {
+        //   value.y = this.cameras.main.centerY + 90;
+        // } else {
+        //   value.y = this.cameras.main.centerY + 140;
+        // }
       }
     }, this);
   }
