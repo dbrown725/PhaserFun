@@ -11,6 +11,8 @@ class GiantScene extends Phaser.Scene {
   ground: Phaser.Physics.Arcade.Image;
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
+  giantPlatforms: Phaser.Physics.Arcade.StaticGroup;
+  giantGroupGroundObject: Phaser.GameObjects.Sprite;
   coins: Phaser.Physics.Arcade.Image[];
   jumpButton: Phaser.Physics.Arcade.Sprite;
   leftButton: Phaser.Physics.Arcade.Sprite;
@@ -20,14 +22,13 @@ class GiantScene extends Phaser.Scene {
   walkerSpeak: Phaser.GameObjects.Text;
   genieSpeak:  Phaser.GameObjects.Text;
   genieSpeak2:  Phaser.GameObjects.Text;
-  underConstruction:  Phaser.GameObjects.Text;
-  giantUnderConstruction:  Phaser.GameObjects.Text;
   castleWall: Phaser.GameObjects.Sprite;
   castleWall2: Phaser.GameObjects.Sprite;
   castleWall3: Phaser.GameObjects.Sprite;
   greyTower1: Phaser.GameObjects.Sprite;
   greyTower2: Phaser.GameObjects.Sprite;
-  giant: Phaser.GameObjects.Sprite;
+  giant: Phaser.Physics.Arcade.Sprite;
+  bigGiant: Phaser.Physics.Arcade.Sprite;
   camera: Phaser.Cameras.Scene2D.Camera;
 
   cursors: any;
@@ -44,6 +45,7 @@ class GiantScene extends Phaser.Scene {
   growSmoke: boolean
   secondsPassed: integer;
   fadeOutStarted: boolean;
+  bigGiantJumped: boolean;
 
   constructor() {
     super({
@@ -60,6 +62,7 @@ class GiantScene extends Phaser.Scene {
       this.openDoor = false;
       this.growSmoke = false;
       this.secondsPassed = 0;
+      this.bigGiantJumped = false;
 
       //Allows for default pointer plus one. Needed so the jump button
       //and a left or right button can be pressed at the same time
@@ -84,12 +87,13 @@ class GiantScene extends Phaser.Scene {
     this.load.image('wallCastle', 'assets/sprites/castle_wall.png');
     this.load.image('towerGrey', 'assets/sprites/tower_grey.png');
     this.load.image('castleGiant', 'assets/sprites/giant.png');
+    this.load.audio('giantStepAudio', ['assets/audio/giant_step.mp3', 'assets/audio/giant_step.ogg']);
   }
 
   create() {
     this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'desertBG');
 
-    this.giant = this.add.sprite(this.sys.canvas.width * .835, this.sys.canvas.height * .215, 'castleGiant');
+    this.giant = this.physics.add.sprite(this.sys.canvas.width + 100, this.sys.canvas.height * .215, 'castleGiant');
     this.giant.setName('giantOfCastle');
     this.giant.setOrigin(0, 0);
     this.giant.setScale(.25, .25);
@@ -151,6 +155,9 @@ class GiantScene extends Phaser.Scene {
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 40, 'ground').setScale(6, 2).refreshBody();
 
+    this.giantPlatforms = this.physics.add.staticGroup();
+    this.giantGroupGroundObject = this.giantPlatforms.create(0, this.sys.canvas.height - 60, 'ground').setScale(6, 2).refreshBody();
+
     var style = { font: '20px Roboto', fill: 'black' };
     this.approvalsLabel = this.add.text(10, 15, 'Approvals granted:', style);
     this.approvalsScore = this.add.text(170, 15, '2/3', style);
@@ -186,8 +193,16 @@ class GiantScene extends Phaser.Scene {
     var walkerStyle = { font: '20px Roboto', fill: 'black' };
     this.walkerSpeak = this.add.text(this.walker.x + 20, this.walker.y - 40, '', walkerStyle);
 
+    this.bigGiant = this.physics.add.sprite(-300, -500, 'castleGiant');
+    this.bigGiant.setName('bigGiant');
+    this.bigGiant.setOrigin(0, 0);
+    this.bigGiant.setScale(-.75, .75);
+    this.bigGiant.setInteractive(true, function() { });
+
     this.physics.add.collider(this.walker, this.platforms);
     this.physics.add.collider(this.walker, this.blocker);
+    this.physics.add.collider(this.giant, this.giantPlatforms);
+    this.physics.add.collider(this.bigGiant, this.platforms);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -262,13 +277,9 @@ class GiantScene extends Phaser.Scene {
       var newCoin = this.physics.add.staticSprite((this.sys.canvas.width * .225) + (value[0] * 50), this.sys.canvas.height * value[1], 'jumperSprites', 'gold_1.png');
       newCoin.setScale(.3).refreshBody();
       newCoin.setCollideWorldBounds(true);
-      //newCoin.y = newCoin.y - 800;
       this.time.delayedCall(Math.random() * (+max - +min) + +min, this.setCoinSpin, [newCoin], this);
       this.coins.push(newCoin);
     }, this);
-
-    var giantStyle = { font: '30px Roboto', fill: 'red' };
-    this.giantUnderConstruction = this.add.text(150, 20, 'Giant Scene under construction', giantStyle);
 
     this.physics.add.collider(this.walker, this.coins, this.coinCollision, null, this);
 
@@ -281,6 +292,25 @@ class GiantScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number) {
+    if(!this.giant.body.touching.down && this.giant.x > -200 && !this.openDoor)  {
+        this.giant.setVelocityX(-90);
+    } else if(this.openDoor){
+        if(this.bigGiant.x < 300) {
+            this.bigGiant.setVelocityX(200);
+            if(!this.bigGiantJumped) {
+                this.bigGiantJumped = true;
+                this.bigGiant.setVelocityY(-450);
+                this.time.delayedCall(3000, function(){
+                    this.sound.play('giantStepAudio');
+                    this.cameras.main.shake(500, .1);
+                }, null, this);
+            }
+        } else {
+            this.bigGiant.setVelocityX(0);
+        }
+    } else {
+        this.giant.setVelocityX(0);
+    }
     if(this.growSmoke) {
       if(this.smoke.scaleX < 4) {
         this.smoke.setScale(4);
@@ -296,18 +326,18 @@ class GiantScene extends Phaser.Scene {
       }
     }
 
-    var timeInSeconds = Math.floor( time / 1000);
-    if(this.secondsPassed != timeInSeconds) {
-      this.secondsPassed = timeInSeconds;
-      if(this.secondsPassed % 5 == 0) {
-        this.cameras.main.shake(500, .005);
-      }
+    //var timeInSeconds = Math.floor( time / 1000);
+    if(this.secondsPassed + 1400 < time && this.score > 0 && !this.openDoor) {
+      this.secondsPassed = time;
+      this.sound.play('giantStepAudio');
+      this.time.delayedCall(400, function(){
+          this.cameras.main.shake(500, .005);
+          this.giant.setVelocityY(-200);
+      }, null, this);
     }
 
     if(!this.fadeOutStarted && (this.walker.x > 618 && this.walker.y > 227)) {
         this.fadeOutStarted = true;
-        //var underConstructionStyle = { font: '30px Roboto', fill: 'red' };
-        //this.underConstruction = this.add.text(150, 60, 'Candy Heaven still under construction.', underConstructionStyle);
         //hide the buttons
         this.jumpButton.y = this.jumpButton.y - 800;
         this.leftButton.y = this.leftButton.y - 800;
@@ -390,9 +420,9 @@ class GiantScene extends Phaser.Scene {
       this.sound.play('smokeAudio');
       this.growSmoke = true;
       var genieStyle = { font: '20px Roboto', fill: 'black' };
-      this.genieSpeak = this.add.text(this.genie.x - 440, this.genie.y + 20, '', genieStyle);
+      this.genieSpeak = this.add.text(this.genie.x - 440, this.genie.y + 100, '', genieStyle);
       this.genieSpeak.text = 'Congrats! You have completed all three challenges.';
-      this.genieSpeak2 = this.add.text(this.genie.x - 410, this.genie.y + 60, '', genieStyle);
+      this.genieSpeak2 = this.add.text(this.genie.x - 410, this.genie.y + 140, '', genieStyle);
       this.genieSpeak2.text = 'You have been granted access to candy heaven.';
       this.time.delayedCall(2000, function(){
           this.approvalsScore.text = '3/3';

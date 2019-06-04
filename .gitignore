@@ -10,7 +10,6 @@ phaserTilemapfix
 *.xcf
 *.wav
 legacy*
-*.txt
 dump/
 *.docx
 *.patch
