@@ -9,10 +9,7 @@ Local Deployment
       ```npm run dev```
       localhost:3000
 
-      ```npm run deploy``` (run and commit before pushing to Heroku)
-
-https://freesound.org
-https://kenney.nl/      
+      ```npm run deploy``` (run and commit before pushing to Heroku)    
 
 Heroku Deployment
  - Starting point  
@@ -21,8 +18,7 @@ Heroku Deployment
       https://gitforwindows.org/
  - Created an Heroku account
       https://heroku.com
- - Via Heroku site added an app "phaserfun"
-      https://phaserfun.herokuapp.com/
+ - Via Heroku site add an app
  - Installed Heroku CLI on local laptop
       https://devcenter.heroku.com/articles/heroku-cli#download-and-install
  - Followed directions to convert configure app to run as php:  
@@ -40,8 +36,6 @@ Heroku Deployment
       git push heroku <local branch>:master) for example
       git push heroku develop:master
       git push heroku feature/securityGuide:master
- - Test app deployed to Heroku:  
-      https://phaserfun.herokuapp.com/
 
 ## Credits
 
