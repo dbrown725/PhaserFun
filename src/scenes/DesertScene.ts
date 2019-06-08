@@ -75,7 +75,71 @@ class DesertScene extends Phaser.Scene {
   }
 
   preload() {
-    //visuals
+      var progressBar = this.add.graphics();
+      progressBar.setX(-82);
+      progressBar.setY(-140);
+      var progressBox = this.add.graphics();
+      progressBox.setX(-82);
+      progressBox.setY(-140);
+      progressBox.fillStyle(0x222222, 0.8);
+      progressBox.fillRect(240, 270, 320, 50);
+
+      var width = this.cameras.main.width;
+      var height = this.cameras.main.height;
+      var loadingText = this.make.text({
+          x: width / 2,
+          y: height / 2 - 50,
+          text: 'Loading...',
+          style: {
+              font: '20px monospace',
+              fill: '#ffffff'
+          }
+      });
+      loadingText.setOrigin(0.5, 0.5);
+
+      var percentText = this.make.text({
+          x: width / 2,
+          y: height / 2 - 5,
+          text: '0%',
+          style: {
+              font: '18px monospace',
+              fill: '#ffffff'
+          }
+      });
+      percentText.setOrigin(0.5, 0.5);
+
+      var assetText = this.make.text({
+          x: width / 2,
+          y: height / 2 + 50,
+          text: '',
+          style: {
+              font: '18px monospace',
+              fill: '#ffffff'
+          }
+      });
+
+      assetText.setOrigin(0.5, 0.5);
+
+      this.load.on('progress', function (value) {
+          percentText.setText((value * 100).toFixed() + '%');
+          progressBar.clear();
+          progressBar.fillStyle(0xffffff, 1);
+          progressBar.fillRect(250, 280, 300 * value, 30);
+      });
+
+      this.load.on('fileprogress', function (file) {
+          assetText.setText('Loading asset: ' + file.key);
+      });
+
+      this.load.on('complete', function () {
+          progressBar.destroy();
+          progressBox.destroy();
+          loadingText.destroy();
+          percentText.destroy();
+          assetText.destroy();
+      });
+
+    //Desert scene
     this.load.image('desertBG', '/assets/sprites/colored_desert_640_341.png');
     this.load.image('tomb', '/assets/sprites/tomb.png');
     this.load.image('door', '/assets/sprites/door.png');
@@ -97,13 +161,32 @@ class DesertScene extends Phaser.Scene {
     this.load.atlasXML('jumperSprites', 'assets/sprites/spritesheet_jumper.png', 'assets/sprites/spritesheet_jumper.xml');
     this.load.image('smoke', '/assets/sprites/smoke.png');
 
-    //audios
     //  Firefox doesn't support mp3 files, so use ogg
     this.load.audio('newPlayerAudio', ['assets/audio/mb_new.mp3', 'assets/audio/mb_new.ogg']);
     this.load.audio('coinAudio', ['assets/audio/mb_coin.mp3', 'assets/audio/mb_coin.ogg']);
     this.load.audio('jumpAudio', ['assets/audio/smb_jump-small.mp3', 'assets/audio/smb_jump-small.ogg']);
     this.load.audio('doorAudio', ['assets/audio/door.mp3', 'assets/audio/door.ogg']);
     this.load.audio('smokeAudio', ['assets/audio/smoke-bomb.mp3', 'assets/audio/smoke-bomb.ogg']);
+
+    //Advertisement1 scene
+    this.load.image('ad1BG', '/assets/sprites/colored_desert_Ad_1.png');
+    //this.load.image('btnRight', '/assets/sprites/rightButton.png');
+
+    //Pyramid scene
+    this.load.atlasXML('sokoban', 'assets/sprites/sokoban_spritesheet.png', 'assets/sprites/sokoban_spritesheet.xml');
+    this.load.atlasXML('round', 'assets/sprites/round.png', 'assets/sprites/round.xml');
+    this.load.image('doorInterior', '/assets/sprites/door_interior.png');
+    this.load.image('doorInteriorBlack', '/assets/sprites/door_interior_black.png');
+
+    //Advertisement2 scene
+    this.load.image('ad2BG', '/assets/sprites/colored_desert_Ad_2.png');
+    //this.load.image('btnRight', '/assets/sprites/rightButton.png');
+
+    //giant scene
+    this.load.image('wallCastle', 'assets/sprites/castle_wall.png');
+    this.load.image('towerGrey', 'assets/sprites/tower_grey.png');
+    this.load.image('castleGiant', 'assets/sprites/giant.png');
+    this.load.audio('giantStepAudio', ['assets/audio/giant_step.mp3', 'assets/audio/giant_step.ogg']);
   }
 
   create() {

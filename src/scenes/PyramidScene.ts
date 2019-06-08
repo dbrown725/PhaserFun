@@ -73,14 +73,8 @@ class PyramidScene extends Phaser.Scene {
       }
   }
 
-preload ()
-    {
-        this.load.atlasXML('sokoban', 'assets/sprites/sokoban_spritesheet.png', 'assets/sprites/sokoban_spritesheet.xml');
-        this.load.atlasXML('round', 'assets/sprites/round.png', 'assets/sprites/round.xml');
-        this.load.image('doorInterior', '/assets/sprites/door_interior.png');
-        this.load.image('doorInteriorBlack', '/assets/sprites/door_interior_black.png');
+preload (){
     }
-
 
   create() {
 

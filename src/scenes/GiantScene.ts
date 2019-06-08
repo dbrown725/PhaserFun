@@ -84,10 +84,6 @@ class GiantScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('wallCastle', 'assets/sprites/castle_wall.png');
-    this.load.image('towerGrey', 'assets/sprites/tower_grey.png');
-    this.load.image('castleGiant', 'assets/sprites/giant.png');
-    this.load.audio('giantStepAudio', ['assets/audio/giant_step.mp3', 'assets/audio/giant_step.ogg']);
   }
 
   create() {

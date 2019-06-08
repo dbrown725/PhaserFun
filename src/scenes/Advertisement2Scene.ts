@@ -39,9 +39,6 @@ class Advertisement2Scene extends Phaser.Scene {
   }
 
   preload() {
-    //visuals
-    this.load.image('ad2BG', '/assets/sprites/colored_desert_Ad_2.png');
-    this.load.image('btnRight', '/assets/sprites/rightButton.png');
   }
 
   create() {
