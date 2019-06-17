@@ -1,11 +1,11 @@
 class CandyHeavenScene extends Phaser.Scene {
   background: Phaser.GameObjects.Sprite;
   background2: Phaser.GameObjects.Sprite;
+  background3: Phaser.GameObjects.Sprite;
   ground: Phaser.Physics.Arcade.Image;
   walker: Phaser.Physics.Arcade.Sprite;
   platformsContainer: Phaser.GameObjects.Container;
   platforms: Phaser.Physics.Arcade.StaticGroup;
-  smoke: Phaser.GameObjects.Sprite;
   lollipopBase1: Phaser.Physics.Arcade.Sprite;
   lollipopFruitGreen: Phaser.Physics.Arcade.Sprite;
   lollipopBase2: Phaser.Physics.Arcade.Sprite;
@@ -62,10 +62,10 @@ class CandyHeavenScene extends Phaser.Scene {
   create() {
     this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'backGroundSprites', 'clouds1.png');
     this.background.setScale(.785);
-    this.background2 = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 65, 'backGroundSprites', 'clouds1.png');
+    this.background2 = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 70, 'backGroundSprites', 'clouds1.png');
     this.background2.setScale(.785);
-    this.smoke = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'smoke');
-    this.smoke.setScale(2);
+    this.background3 = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 90, 'backGroundSprites', 'clouds1.png');
+    this.background3.setScale(.785);
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 35, 'ground').setScale(6, 2).refreshBody();
@@ -118,11 +118,6 @@ class CandyHeavenScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number) {
-    if(this.smoke.scaleX < 5) {
-      this.smoke.alpha = this.smoke.alpha - .01;
-      this.smoke.scaleX = this.smoke.scaleX * 1.01;
-      this.smoke.scaleY = this.smoke.scaleY * 1.01;
-    }
   }
 
 }

@@ -93,43 +93,36 @@ class GiantScene extends Phaser.Scene {
     this.giant.setName('giantOfCastle');
     this.giant.setOrigin(0, 0);
     this.giant.setScale(.25, .25);
-    this.giant.setInteractive(true, function() { });
 
     this.castleWall = this.add.sprite(this.sys.canvas.width * .295, this.sys.canvas.height * .315, 'wallCastle');
     this.castleWall.setName('castleWall1');
     this.castleWall.setOrigin(0, 0);
     this.castleWall.setScale(1, 1);
-    this.castleWall.setInteractive(true, function() { });
 
     this.castleWall2 = this.add.sprite(this.sys.canvas.width * .725, this.sys.canvas.height * .315, 'wallCastle');
     this.castleWall2.setName('castleWall2');
     this.castleWall2.setOrigin(0, 0);
     this.castleWall2.setScale(1, 1);
-    this.castleWall2.setInteractive(true, function() { });
 
     this.castleWall3 = this.add.sprite(this.sys.canvas.width * -.125, this.sys.canvas.height * .315, 'wallCastle');
     this.castleWall3.setName('castleWall3');
     this.castleWall3.setOrigin(0, 0);
     this.castleWall3.setScale(1, 1);
-    this.castleWall3.setInteractive(true, function() { });
 
     this.greyTower1 = this.add.sprite(this.sys.canvas.width * .245, this.sys.canvas.height * .04, 'towerGrey');
     this.greyTower1.setName('grreyTower1');
     this.greyTower1.setOrigin(0, 0);
     this.greyTower1.setScale(1, 1);
-    this.greyTower1.setInteractive(true, function() { });
 
     this.greyTower2 = this.add.sprite(this.sys.canvas.width * .685, this.sys.canvas.height * .04, 'towerGrey');
     this.greyTower2.setName('greyTower2');
     this.greyTower2.setOrigin(0, 0);
     this.greyTower2.setScale(1, 1);
-    this.greyTower2.setInteractive(true, function() { });
 
     this.tomb = this.add.sprite(this.sys.canvas.width * .825, this.sys.canvas.height * -.088, 'tomb');
     this.tomb.setName('tomb');
     this.tomb.setOrigin(0, 0);
     this.tomb.setScale(1.25, 1.25);
-    this.tomb.setInteractive(true, function() { });
 
     this.genie = this.add.sprite(this.sys.canvas.width * .75, this.sys.canvas.height * .235, 'genie');
     this.genie.setName('genie');
@@ -142,11 +135,9 @@ class GiantScene extends Phaser.Scene {
 
     this.blocker = this.physics.add.staticSprite(this.sys.canvas.width * .999, this.sys.canvas.height * .690, 'blocker');
     this.blocker.setScale(1.35).refreshBody();
-    this.blocker.setInteractive(true, function() { });
 
     this.door = this.physics.add.staticSprite(this.sys.canvas.width * .985, this.sys.canvas.height * .698, 'door');
     this.door.setScale(1.35).refreshBody();
-    this.door.setInteractive(true, function() { });
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 40, 'ground').setScale(6, 2).refreshBody();
@@ -193,7 +184,6 @@ class GiantScene extends Phaser.Scene {
     this.bigGiant.setName('bigGiant');
     this.bigGiant.setOrigin(0, 0);
     this.bigGiant.setScale(-.75, .75);
-    this.bigGiant.setInteractive(true, function() { });
 
     this.physics.add.collider(this.walker, this.platforms);
     this.physics.add.collider(this.walker, this.blocker);

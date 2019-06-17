@@ -1,5 +1,8 @@
 class Advertisement1Scene extends Phaser.Scene {
-  background: Phaser.GameObjects.Sprite;
+  frog: Phaser.GameObjects.Sprite;
+  raccoon: Phaser.GameObjects.Sprite;
+  groundHog: Phaser.GameObjects.Sprite;
+  meetTheTeam: Phaser.GameObjects.Sprite;
   rightButton: Phaser.Physics.Arcade.Sprite;
   camera: Phaser.Cameras.Scene2D.Camera;
   countDownText:  Phaser.GameObjects.Text;
@@ -20,7 +23,7 @@ class Advertisement1Scene extends Phaser.Scene {
 
   init() {
       this.isContinue = false;
-      this.countDown = 16;
+      this.countDown = 21;
       this.secondsPassed = 0;
       this.isMobile = false;
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent)) {
@@ -42,7 +45,10 @@ class Advertisement1Scene extends Phaser.Scene {
   }
 
   create() {
-    this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'ad1BG');
+    this.raccoon = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'raccoon');
+    this.frog = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'frog');
+    this.groundHog = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'groundHog');
+    this.meetTheTeam = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'meetTheTeam');
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.continueKey = this.input.keyboard.addKey('C');
@@ -78,7 +84,13 @@ class Advertisement1Scene extends Phaser.Scene {
       this.secondsPassed = timeInSeconds;
       this.countDown = this.countDown - 1;
       this.countDownText.text = this.countDown.toString();
-      if(this.countDown == 0) {
+      if(this.countDown == 15) {
+          this.meetTheTeam.y = this.meetTheTeam.y - 800;
+      } else if(this.countDown == 10) {
+          this.groundHog.y = this.groundHog.y - 800;
+      } else if(this.countDown == 5) {
+          this.frog.y = this.frog.y - 800;
+      } else if(this.countDown == 0) {
         if(this.isMobile ) {
           this.showRightButton();
         } else {

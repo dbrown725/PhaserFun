@@ -170,6 +170,10 @@ class DesertScene extends Phaser.Scene {
 
     //Advertisement1 scene
     this.load.image('ad1BG', '/assets/sprites/colored_desert_Ad_1.png');
+    this.load.image('frog', '/assets/sprites/frog.png');
+    this.load.image('raccoon', '/assets/sprites/raccoon.png');
+    this.load.image('groundHog', '/assets/sprites/groundHog.png');
+    this.load.image('meetTheTeam', '/assets/sprites/meetTheTeam.png');
     //this.load.image('btnRight', '/assets/sprites/rightButton.png');
 
     //Pyramid scene
@@ -196,7 +200,6 @@ class DesertScene extends Phaser.Scene {
     this.tomb.setName('tomb');
     this.tomb.setOrigin(0, 0);
     this.tomb.setScale(1.25, 1.25);
-    this.tomb.setInteractive(true, function() { });
 
     this.genie = this.add.sprite(this.sys.canvas.width * .75, this.sys.canvas.height * .235, 'genie');
     this.genie.setName('genie');
@@ -215,11 +218,9 @@ class DesertScene extends Phaser.Scene {
 
     this.blocker = this.physics.add.staticSprite(this.sys.canvas.width * .999, this.sys.canvas.height * .690, 'blocker');
     this.blocker.setScale(1.35).refreshBody();
-    this.blocker.setInteractive(true, function() { });
 
     this.door = this.physics.add.staticSprite(this.sys.canvas.width * .985, this.sys.canvas.height * .698, 'door');
     this.door.setScale(1.35).refreshBody();
-    this.door.setInteractive(true, function() { });
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(0, this.sys.canvas.height - 40, 'ground').setScale(6, 2).refreshBody();
