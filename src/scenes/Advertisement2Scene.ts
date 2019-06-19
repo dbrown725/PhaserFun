@@ -42,7 +42,7 @@ class Advertisement2Scene extends Phaser.Scene {
   }
 
   create() {
-    this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'ad2BG');
+    this.background = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'whatWeDo');
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.continueKey = this.input.keyboard.addKey('C');

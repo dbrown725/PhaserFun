@@ -176,7 +176,7 @@ class DesertScene extends Phaser.Scene {
     this.load.image('sham', '/assets/sprites/sham.png');
     this.load.image('gplSnl', '/assets/sprites/gplSnl.png');
     this.load.image('prakTreb', '/assets/sprites/prakTreb.png');
-
+    this.load.image('whatWeDo', '/assets/sprites/whatWeDo.png');
 
     //Pyramid scene
     this.load.atlasXML('sokoban', 'assets/sprites/sokoban_spritesheet.png', 'assets/sprites/sokoban_spritesheet.xml');
