@@ -169,12 +169,14 @@ class DesertScene extends Phaser.Scene {
     this.load.audio('smokeAudio', ['assets/audio/smoke-bomb.mp3', 'assets/audio/smoke-bomb.ogg']);
 
     //Advertisement1 scene
-    this.load.image('ad1BG', '/assets/sprites/colored_desert_Ad_1.png');
-    this.load.image('frog', '/assets/sprites/frog.png');
-    this.load.image('raccoon', '/assets/sprites/raccoon.png');
-    this.load.image('groundHog', '/assets/sprites/groundHog.png');
+    //this.load.image('ad1BG', '/assets/sprites/colored_desert_Ad_1.png');
     this.load.image('meetTheTeam', '/assets/sprites/meetTheTeam.png');
-    //this.load.image('btnRight', '/assets/sprites/rightButton.png');
+    this.load.image('team', '/assets/sprites/team.png');
+    this.load.image('treb', '/assets/sprites/treb.png');
+    this.load.image('sham', '/assets/sprites/sham.png');
+    this.load.image('gplSnl', '/assets/sprites/gplSnl.png');
+    this.load.image('prakTreb', '/assets/sprites/prakTreb.png');
+
 
     //Pyramid scene
     this.load.atlasXML('sokoban', 'assets/sprites/sokoban_spritesheet.png', 'assets/sprites/sokoban_spritesheet.xml');

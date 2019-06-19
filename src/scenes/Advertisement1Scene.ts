@@ -1,8 +1,10 @@
 class Advertisement1Scene extends Phaser.Scene {
-  frog: Phaser.GameObjects.Sprite;
-  raccoon: Phaser.GameObjects.Sprite;
-  groundHog: Phaser.GameObjects.Sprite;
   meetTheTeam: Phaser.GameObjects.Sprite;
+  team: Phaser.GameObjects.Sprite;
+  treb: Phaser.GameObjects.Sprite;
+  sham: Phaser.GameObjects.Sprite;
+  gplSnl: Phaser.GameObjects.Sprite;
+  prakTreb: Phaser.GameObjects.Sprite;
   rightButton: Phaser.Physics.Arcade.Sprite;
   camera: Phaser.Cameras.Scene2D.Camera;
   countDownText:  Phaser.GameObjects.Text;
@@ -23,7 +25,7 @@ class Advertisement1Scene extends Phaser.Scene {
 
   init() {
       this.isContinue = false;
-      this.countDown = 21;
+      this.countDown = 31;
       this.secondsPassed = 0;
       this.isMobile = false;
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent)) {
@@ -45,9 +47,11 @@ class Advertisement1Scene extends Phaser.Scene {
   }
 
   create() {
-    this.raccoon = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'raccoon');
-    this.frog = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'frog');
-    this.groundHog = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'groundHog');
+    this.prakTreb = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'prakTreb');
+    this.gplSnl = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'gplSnl');
+    this.sham = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'sham');
+    this.treb = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'treb');
+    this.team = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'team');
     this.meetTheTeam = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'meetTheTeam');
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -84,12 +88,16 @@ class Advertisement1Scene extends Phaser.Scene {
       this.secondsPassed = timeInSeconds;
       this.countDown = this.countDown - 1;
       this.countDownText.text = this.countDown.toString();
-      if(this.countDown == 15) {
+      if(this.countDown == 25) {
           this.meetTheTeam.y = this.meetTheTeam.y - 800;
+      } else if(this.countDown == 20) {
+          this.team.y = this.team.y - 800;
+      } else if(this.countDown == 15) {
+          this.treb.y = this.treb.y - 800;
       } else if(this.countDown == 10) {
-          this.groundHog.y = this.groundHog.y - 800;
+          this.sham.y = this.sham.y - 800;
       } else if(this.countDown == 5) {
-          this.frog.y = this.frog.y - 800;
+          this.gplSnl.y = this.gplSnl.y - 800;
       } else if(this.countDown == 0) {
         if(this.isMobile ) {
           this.showRightButton();
