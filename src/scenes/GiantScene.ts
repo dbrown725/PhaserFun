@@ -325,9 +325,9 @@ class GiantScene extends Phaser.Scene {
     if(!this.fadeOutStarted && (this.walker.x > 618 && this.walker.y > 227)) {
         this.fadeOutStarted = true;
         //hide the buttons
-        this.jumpButton.y = this.jumpButton.y - 800;
-        this.leftButton.y = this.leftButton.y - 800;
-        this.rightButton.y = this.rightButton.y - 800;
+        //this.jumpButton.y = this.jumpButton.y - 800;
+        //this.leftButton.y = this.leftButton.y - 800;
+        //this.rightButton.y = this.rightButton.y - 800;
         this.cameras.main.fade(2000);
     }
     if ((this.cursors.left.isDown || this.moveLeft)
